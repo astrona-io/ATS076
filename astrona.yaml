@@ -1,0 +1,74 @@
+# Preparation scaffold. Technical pages stay draft until authoring and review.
+training:
+  id: ATS076
+  title: 'OTCA: Maintaining and Debugging Observability Pipelines'
+  description: Preparation scaffold for Maintaining and Debugging Observability Pipelines. Lessons and
+    environments are planned.
+  certification:
+    name: OpenTelemetry Certified Associate
+    code: OTCA
+    provider: CNCF / Linux Foundation
+    domain: Maintaining and Debugging Observability Pipelines
+    weight: 10
+    competencies:
+    - Context Propagation
+    - Debugging Pipelines
+    - Error Handling
+    - Schema Management
+modules:
+- id: module-intro
+  title: Introduction
+  description: Planned introduction and authoring status.
+  content:
+  - type: reading
+    title: Introduction
+    path: sections/intro/README.md
+  - type: reading
+    title: Welcome To The Course
+    path: sections/intro/course-01-welcome.md
+  - type: reading
+    title: Get Your Machine Ready
+    path: sections/intro/course-02-get-your-machine-ready.md
+  - type: reading
+    title: How This Course Is Made
+    path: sections/intro/course-03-how-this-course-is-made.md
+- id: module-010
+  title: Context Propagation
+  description: Planned coverage of this curriculum objective.
+  content:
+  - type: reading
+    title: Section Overview
+    path: sections/section-010/README.md
+  - type: reading
+    title: Context Propagation
+    path: sections/section-010/module-01/course.md
+- id: module-020
+  title: Debugging Pipelines
+  description: Planned coverage of this curriculum objective.
+  content:
+  - type: reading
+    title: Section Overview
+    path: sections/section-020/README.md
+  - type: reading
+    title: Debugging Pipelines
+    path: sections/section-020/module-01/course.md
+- id: module-030
+  title: Error Handling
+  description: Planned coverage of this curriculum objective.
+  content:
+  - type: reading
+    title: Section Overview
+    path: sections/section-030/README.md
+  - type: reading
+    title: Error Handling
+    path: sections/section-030/module-01/course.md
+- id: module-040
+  title: Schema Management
+  description: Planned coverage of this curriculum objective.
+  content:
+  - type: reading
+    title: Section Overview
+    path: sections/section-040/README.md
+  - type: reading
+    title: Schema Management
+    path: sections/section-040/module-01/course.md
