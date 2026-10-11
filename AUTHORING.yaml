@@ -1,0 +1,99 @@
+version: 1
+approval: OTCA requested 2026-10-11; established reading-only scope
+course:
+  id: ATS076
+  certification:
+    name: OpenTelemetry Certified Associate
+    code: OTCA
+    provider: CNCF / Linux Foundation
+    domain: Maintaining and Debugging Observability Pipelines
+    weight: 10
+    competencies:
+    - Context Propagation
+    - Debugging Pipelines
+    - Error Handling
+    - Schema Management
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: Context Propagation
+  curriculum_item: Context Propagation
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Broken Trace Relationships And Propagation Diagnosis
+    objectives:
+    - Locate propagation failures along sender, carrier and receiver boundaries.
+    - Distinguish sampling gaps from missing context.
+    - Reason about asynchronous work and untrusted incoming identifiers.
+    outline:
+    - Broken Trace Relationships And Propagation Diagnosis
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+      adapted_from: null
+- id: section-020
+  title: Debugging Pipelines
+  curriculum_item: Debugging Pipelines
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Intake, Processing And Export Failure Localization
+    objectives:
+    - Trace missing telemetry through instrumentation, SDK, Collector and backend boundaries.
+    - Interpret internal diagnostics without assuming end-to-end delivery.
+    - Explain safe use and limits of diagnostic exporters.
+    outline:
+    - Intake, Processing And Export Failure Localization
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+      adapted_from: null
+- id: section-030
+  title: Error Handling
+  curriculum_item: Error Handling
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Bounded Queues, Retries And Observable Telemetry Loss
+    objectives:
+    - Explain transient and permanent export failures.
+    - Distinguish retry, buffering and persistent queue responsibilities.
+    - Reason about duplicate delivery, backpressure and application safety.
+    outline:
+    - Bounded Queues, Retries And Observable Telemetry Loss
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+      adapted_from: null
+- id: section-040
+  title: Schema Management
+  curriculum_item: Schema Management
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Schema Identity, Convention Migration And Consumer Compatibility
+    objectives:
+    - Explain schema metadata and semantic-convention compatibility.
+    - Distinguish producer change from pipeline delivery failure.
+    - Plan migration across instrumentation, transformations and queries.
+    outline:
+    - Schema Identity, Convention Migration And Consumer Compatibility
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+      adapted_from: null

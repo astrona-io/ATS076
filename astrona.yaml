@@ -1,9 +1,9 @@
-# Preparation scaffold. Technical pages stay draft until authoring and review.
+# Reading-only content; YAML knowledge checks have a separate index.
 training:
   id: ATS076
   title: 'OTCA: Maintaining and Debugging Observability Pipelines'
-  description: Preparation scaffold for Maintaining and Debugging Observability Pipelines. Lessons and
-    environments are planned.
+  description: 'Detailed reading material and reusable YAML knowledge checks for OTCA: Maintaining and
+    Debugging Observability Pipelines. Technical content remains draft. No labs or playgrounds.'
   certification:
     name: OpenTelemetry Certified Associate
     code: OTCA
@@ -18,7 +18,7 @@ training:
 modules:
 - id: module-intro
   title: Introduction
-  description: Planned introduction and authoring status.
+  description: Audience, reading method and review process.
   content:
   - type: reading
     title: Introduction
@@ -34,41 +34,69 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Context Propagation
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Context Propagation.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-010/README.md
   - type: reading
     title: Context Propagation
+    path: sections/section-010/README.md
+  - type: reading
+    title: Broken Trace Relationships And Propagation Diagnosis
     path: sections/section-010/module-01/course.md
+  - type: reading
+    title: Broken Trace Relationships And Propagation Diagnosis
+    path: sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-01/course-02-summary.md
 - id: module-020
   title: Debugging Pipelines
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Debugging Pipelines.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-020/README.md
   - type: reading
     title: Debugging Pipelines
+    path: sections/section-020/README.md
+  - type: reading
+    title: Intake, Processing And Export Failure Localization
     path: sections/section-020/module-01/course.md
+  - type: reading
+    title: Intake, Processing And Export Failure Localization
+    path: sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-01/course-02-summary.md
 - id: module-030
   title: Error Handling
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Error Handling.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-030/README.md
   - type: reading
     title: Error Handling
+    path: sections/section-030/README.md
+  - type: reading
+    title: Bounded Queues, Retries And Observable Telemetry Loss
     path: sections/section-030/module-01/course.md
+  - type: reading
+    title: Bounded Queues, Retries And Observable Telemetry Loss
+    path: sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-01/course-02-summary.md
 - id: module-040
   title: Schema Management
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Schema Management.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: Schema Management
     path: sections/section-040/README.md
   - type: reading
-    title: Schema Management
+    title: Schema Identity, Convention Migration And Consumer Compatibility
     path: sections/section-040/module-01/course.md
+  - type: reading
+    title: Schema Identity, Convention Migration And Consumer Compatibility
+    path: sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-01/course-02-summary.md
