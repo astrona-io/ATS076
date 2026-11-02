@@ -35,7 +35,7 @@ modules:
 - id: module-010
   title: Context Propagation
   description: Developed reading and reasoning for Context Propagation.
-  draft: true
+  status: alpha
   content:
   - type: reading
     title: Context Propagation
@@ -52,7 +52,7 @@ modules:
 - id: module-020
   title: Debugging Pipelines
   description: Developed reading and reasoning for Debugging Pipelines.
-  draft: true
+  status: alpha
   content:
   - type: reading
     title: Debugging Pipelines
@@ -69,7 +69,7 @@ modules:
 - id: module-030
   title: Error Handling
   description: Developed reading and reasoning for Error Handling.
-  draft: true
+  status: alpha
   content:
   - type: reading
     title: Error Handling
@@ -86,7 +86,7 @@ modules:
 - id: module-040
   title: Schema Management
   description: Developed reading and reasoning for Schema Management.
-  draft: true
+  status: alpha
   content:
   - type: reading
     title: Schema Management
