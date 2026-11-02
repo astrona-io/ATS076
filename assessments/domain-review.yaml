@@ -1,0 +1,244 @@
+schema_version: 1
+kind: question_bank
+id: ats076-domain-review
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Maintaining and Debugging Observability Pipelines
+placement:
+  position: after
+  reading: sections/section-040/module-01/course-02-summary.md
+questions:
+- id: ats076-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Locate propagation failures along sender, carrier and receiver boundaries.
+  source_readings:
+  - sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+  prompt: HTTP requests succeed but every downstream span starts a new trace. What should be investigated?
+  options:
+  - id: a
+    text: Only the browser theme.
+    explanation: Presentation does not preserve headers.
+  - id: b
+    text: Injection, header preservation and receiver extraction.
+    explanation: Business transport can work while context propagation fails.
+  - id: c
+    text: Only the database backup schedule.
+    explanation: It does not establish trace relationships.
+  correct_option: b
+  explanation: Business transport can work while context propagation fails.
+- id: ats076-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish sampling gaps from missing context.
+  source_readings:
+  - sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+  prompt: Why inspect sampling as well as context?
+  options:
+  - id: a
+    text: Valid context can exist even when span evidence is not retained.
+    explanation: Relationship and recording policies are distinct.
+  - id: b
+    text: Sampling always deletes every context field.
+    explanation: That is not a universal rule.
+  - id: c
+    text: Every missing span proves malformed headers.
+    explanation: Several boundaries can remove evidence.
+  correct_option: a
+  explanation: Relationship and recording policies are distinct.
+- id: ats076-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Reason about asynchronous work and untrusted incoming identifiers.
+  source_readings:
+  - sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+  prompt: Should a received trace ID grant a sensitive operation?
+  options:
+  - id: a
+    text: Yes, if the identifier is long enough.
+    explanation: Length does not prove identity or permission.
+  - id: b
+    text: Yes, if it matches the card title.
+    explanation: Titles are unrelated to authority.
+  - id: c
+    text: No; it is correlation data rather than authorization.
+    explanation: Callers can supply identifiers.
+  correct_option: c
+  explanation: Callers can supply identifiers.
+- id: ats076-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace missing telemetry through instrumentation, SDK, Collector and backend boundaries.
+  source_readings:
+  - sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+  prompt: The Collector receives spans but none reach the destination. Which next boundaries are relevant?
+  options:
+  - id: a
+    text: Only the catalog owner name.
+    explanation: That does not explain export.
+  - id: b
+    text: Enabled processors, exporter behavior and destination acceptance.
+    explanation: The failure lies after observed intake.
+  - id: c
+    text: Only whether the application emitted any spans.
+    explanation: Intake already establishes some production.
+  correct_option: b
+  explanation: The failure lies after observed intake.
+- id: ats076-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret internal diagnostics without assuming end-to-end delivery.
+  source_readings:
+  - sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+  prompt: What does a healthy Collector process establish by itself?
+  options:
+  - id: a
+    text: Only its implemented process and health conditions.
+    explanation: Pipeline and destination failures can still exist.
+  - id: b
+    text: Every record reached durable backend storage.
+    explanation: That is broader than process health.
+  - id: c
+    text: Every application has complete instrumentation.
+    explanation: The Collector does not prove application coverage.
+  correct_option: a
+  explanation: Pipeline and destination failures can still exist.
+- id: ats076-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain safe use and limits of diagnostic exporters.
+  source_readings:
+  - sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+  prompt: Why restrict a debug exporter's output?
+  options:
+  - id: a
+    text: It never shows any values.
+    explanation: Payload visibility is a diagnostic use.
+  - id: b
+    text: Every log sink automatically anonymizes tokens.
+    explanation: Anonymization must be deliberate.
+  - id: c
+    text: It can expose detailed or sensitive telemetry payloads.
+    explanation: Diagnostic visibility is also a data boundary.
+  correct_option: c
+  explanation: Diagnostic visibility is also a data boundary.
+- id: ats076-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain transient and permanent export failures.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+  prompt: Which failure is least likely to be repaired by blind retries?
+  options:
+  - id: a
+    text: A short burst within available queue capacity.
+    explanation: Buffering may absorb it.
+  - id: b
+    text: A persistently invalid destination credential.
+    explanation: The authorization contract must change.
+  - id: c
+    text: A brief recoverable network interruption.
+    explanation: A retry may help a transient failure.
+  correct_option: b
+  explanation: The authorization contract must change.
+- id: ats076-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish retry, buffering and persistent queue responsibilities.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+  prompt: What does a bounded queue provide?
+  options:
+  - id: a
+    text: Temporary capacity to hold pending data.
+    explanation: It cannot hold unlimited traffic.
+  - id: b
+    text: A guarantee of infinite retention.
+    explanation: Capacity is finite.
+  - id: c
+    text: Automatic correction of every incompatible schema.
+    explanation: A queue does not change payload meaning.
+  correct_option: a
+  explanation: It cannot hold unlimited traffic.
+- id: ats076-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Reason about duplicate delivery, backpressure and application safety.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+  prompt: Why can retries create duplicate records?
+  options:
+  - id: a
+    text: Every retry always uses a new business request.
+    explanation: Export retries concern telemetry delivery.
+  - id: b
+    text: A trace ID automatically enforces exactly-once storage everywhere.
+    explanation: Storage deduplication is not universally guaranteed.
+  - id: c
+    text: A destination may accept data even when the acknowledgement is lost.
+    explanation: The sender can be uncertain about prior acceptance.
+  correct_option: c
+  explanation: The sender can be uncertain about prior acceptance.
+- id: ats076-domain-review-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain schema metadata and semantic-convention compatibility.
+  source_readings:
+  - sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+  prompt: A dashboard becomes empty after an attribute rename while export succeeds. What is a likely
+    boundary to inspect?
+  options:
+  - id: a
+    text: Only the catalog display title.
+    explanation: That is unrelated to telemetry schema.
+  - id: b
+    text: Producer-consumer schema compatibility.
+    explanation: Queries may still expect the old field.
+  - id: c
+    text: Only application TCP connectivity.
+    explanation: Delivery can already be healthy.
+  correct_option: b
+  explanation: Queries may still expect the old field.
+- id: ats076-domain-review-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish producer change from pipeline delivery failure.
+  source_readings:
+  - sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+  prompt: What should a convention migration inventory include?
+  options:
+  - id: a
+    text: Producers, transformations and consumers that depend on changed fields.
+    explanation: Every stage can encode schema assumptions.
+  - id: b
+    text: Only the number of browser tabs.
+    explanation: Tabs do not identify field dependencies.
+  - id: c
+    text: Only an exporter hostname.
+    explanation: Transport location is not the whole schema contract.
+  correct_option: a
+  explanation: Every stage can encode schema assumptions.
+- id: ats076-domain-review-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Plan migration across instrumentation, transformations and queries.
+  source_readings:
+  - sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+  prompt: Does schema metadata guarantee every backend automatically converts all versions?
+  options:
+  - id: a
+    text: Yes; all consumers implement every migration.
+    explanation: That is not a universal guarantee.
+  - id: b
+    text: Yes; changing a URL recreates discarded telemetry.
+    explanation: Metadata cannot recreate absent observations.
+  - id: c
+    text: No; conversion support must be verified.
+    explanation: Implementations and supported transformations differ.
+  correct_option: c
+  explanation: Implementations and supported transformations differ.
