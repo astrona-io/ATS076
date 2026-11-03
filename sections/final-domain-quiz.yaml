@@ -1,0 +1,335 @@
+# Final domain knowledge check across all four sections.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-final
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: domain
+  id: maintaining-and-debugging-observability-pipelines
+  title: Maintaining and Debugging Observability Pipelines
+questions:
+- id: ats076-final-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find the hop that removes a header with a request
+  source_readings:
+  - sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+  prompt: You send a request with `traceparent` and `tracestate` to a `probe` through
+    an `edge` proxy and a `gateway` proxy in a chain. The echo shows neither header.
+    A request sent to the `gateway` directly shows both. Which component removes them?
+  options:
+  - id: a
+    text: The `gateway`.
+    explanation: The direct request shows that the gateway forwards them.
+  - id: b
+    text: The `edge`.
+    explanation: Correct. The gateway forwards what it receives, so the edge removes
+      them.
+  - id: c
+    text: The `probe`.
+    explanation: The probe reports what it receives.
+  - id: d
+    text: The Collector.
+    explanation: It is not on the request path.
+  correct_option: b
+  explanation: Test from the last hop towards the entry point.
+- id: ats076-final-q02
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Protect internal services from untrusted baggage
+  source_readings:
+  - sections/section-010/module-02/course-02-untrusted-context-at-the-edge.md
+  prompt: Why remove the `baggage` header from public callers but not from internal
+    callers?
+  options:
+  - id: a
+    text: Public callers are outside the trust boundary, and internal services use
+      baggage from trusted callers.
+    explanation: Correct. Untrusted values must not reach internal logic.
+  - id: b
+    text: Baggage breaks the trace.
+    explanation: Baggage and the trace context are separate headers.
+  - id: c
+    text: Baggage is larger than other headers.
+    explanation: Size is not the reason.
+  - id: d
+    text: Internal callers cannot send baggage.
+    explanation: They can and do.
+  correct_option: a
+  explanation: Remove untrusted input at the boundary.
+- id: ats076-final-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain a parent-based sampler
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: A service receives `traceparent` with the flag `00` and uses `parentbased_traceidratio`.
+    Does it record the trace?
+  options:
+  - id: a
+    text: Yes, always.
+    explanation: The parent flag says not to record.
+  - id: b
+    text: It records one trace in ten.
+    explanation: The ratio applies only without a parent.
+  - id: c
+    text: It records errors only.
+    explanation: This sampler does not look at errors.
+  - id: d
+    text: No, because it follows the parent's sampled flag.
+    explanation: Correct. A remote parent decides before the ratio.
+  correct_option: d
+  explanation: With a remote parent the sampler follows its flag.
+- id: ats076-final-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Recognize a harmless header loss
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: A proxy removes `tracestate` and keeps `traceparent`. What is lost?
+  options:
+  - id: a
+    text: The whole trace.
+    explanation: The tree stays intact.
+  - id: b
+    text: The sampling decision.
+    explanation: The flag is in `traceparent`.
+  - id: c
+    text: Vendor data only; the trace stays connected.
+    explanation: Correct. The identity of the trace is in `traceparent`.
+  - id: d
+    text: The span names.
+    explanation: Names are not in a header.
+  correct_option: c
+  explanation: A missing `tracestate` is a quiet fault.
+- id: ats076-final-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain a defined but unlisted component
+  source_readings:
+  - sections/section-020/module-01/course-01-how-a-collector-builds-pipelines.md
+  prompt: A processor is defined in the configuration and is not in any pipeline.
+    What is the effect?
+  options:
+  - id: a
+    text: The Collector fails to start.
+    explanation: The definition is valid.
+  - id: b
+    text: It is valid and does nothing.
+    explanation: Correct. Only listed components run.
+  - id: c
+    text: The processor runs on all data.
+    explanation: It runs only in a pipeline.
+  - id: d
+    text: The processor runs on metrics only.
+    explanation: It does not run.
+  correct_option: b
+  explanation: Defined is not the same as used.
+- id: ats076-final-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find the stage that drops spans
+  source_readings:
+  - sections/section-020/module-02/course-01-counting-items-between-stages.md
+  prompt: A receiver counts 20 accepted spans, a processor shows 20 incoming and 20
+    outgoing items, and the exporter shows 5 sent spans and 15 failed. Where is the
+    fault?
+  options:
+  - id: a
+    text: At the exporter, which could not send 15 spans.
+    explanation: Correct. The processor passed everything on.
+  - id: b
+    text: At the receiver.
+    explanation: It accepted all spans.
+  - id: c
+    text: At the processor.
+    explanation: Its outgoing count equals its incoming count.
+  - id: d
+    text: In the application.
+    explanation: The Collector accepted every span.
+  correct_option: a
+  explanation: The first drop between neighbouring counters locates the stage.
+- id: ats076-final-q07
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Write a drop rule for what to remove
+  source_readings:
+  - sections/section-020/module-02/course-02-processors-that-drop-data.md
+  prompt: Which `filter` condition drops only health check spans named `GET /healthz`?
+  options:
+  - id: a
+    text: '`span.name != "GET /healthz"`.'
+    explanation: It drops every other span.
+  - id: b
+    text: '`span.name == "POST /checkout"`.'
+    explanation: It drops checkout spans.
+  - id: c
+    text: "`span.kind == SPAN_KIND_SERVER`."
+    explanation: It drops all server spans.
+  - id: d
+    text: '`span.name == "GET /healthz"`.'
+    explanation: Correct. The condition names the spans to drop.
+  correct_option: d
+  explanation: Write the condition for what to remove.
+- id: ats076-final-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Follow a failed batch
+  source_readings:
+  - sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+  prompt: Which settings decide whether a batch is sent again after a 503 response?
+  options:
+  - id: a
+    text: "`memory_limiter` only."
+    explanation: It refuses data and does not retry exports.
+  - id: b
+    text: "`health_check`."
+    explanation: It reports process health.
+  - id: c
+    text: "`retry_on_failure`, with its intervals and time limit."
+    explanation: Correct. A 503 is retryable.
+  - id: d
+    text: "`num_consumers` only."
+    explanation: It sets the number of senders.
+  correct_option: c
+  explanation: Retry settings decide the fate of a failed batch.
+- id: ats076-final-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Keep queued data across a restart
+  source_readings:
+  - sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+  prompt: Which three things does a persistent queue need?
+  options:
+  - id: a
+    text: A larger `queue_size` only.
+    explanation: That still uses memory.
+  - id: b
+    text: A `file_storage` extension, a `storage` reference in the queue and a writable
+      volume.
+    explanation: Correct. The extension must also be listed in `service.extensions`.
+  - id: c
+    text: A second exporter.
+    explanation: It does not store data.
+  - id: d
+    text: A longer `timeout`.
+    explanation: It does not store data.
+  correct_option: b
+  explanation: A queue in memory is lost at a restart.
+- id: ats076-final-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Place and size the limiter
+  source_readings:
+  - sections/section-030/module-02/course-01-the-memory-limiter.md
+  prompt: A container has a 256 MiB limit. Which `memory_limiter` setting leaves room
+    for the runtime?
+  options:
+  - id: a
+    text: "`limit_mib: 200` and `spike_limit_mib: 40`."
+    explanation: Correct. The hard limit is below the container limit.
+  - id: b
+    text: "`limit_mib: 256` and `spike_limit_mib: 50`."
+    explanation: The limit equals the container limit.
+  - id: c
+    text: "`limit_mib: 300`."
+    explanation: It is above the container limit.
+  - id: d
+    text: "`limit_mib: 200` and `spike_limit_mib: 200`."
+    explanation: The soft limit would be zero.
+  correct_option: a
+  explanation: Keep the hard limit below the container limit.
+- id: ats076-final-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read a refusal
+  source_readings:
+  - sections/section-030/module-02/course-02-refusing-data-and-its-effect-on-senders.md
+  prompt: "`otelcol_receiver_refused_spans` rises. What does it show?"
+  options:
+  - id: a
+    text: Spans were lost inside the Collector.
+    explanation: They were not accepted.
+  - id: b
+    text: The backend refused the spans.
+    explanation: That is an exporter counter.
+  - id: c
+    text: The sampler dropped them.
+    explanation: A sampler does not refuse.
+  - id: d
+    text: The receiver could not pass spans on, and the sender gets an error.
+    explanation: Correct. Refused spans were never accepted.
+  correct_option: d
+  explanation: A refusal is an error for the sender.
+- id: ats076-final-q12
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Know why names matter
+  source_readings:
+  - sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+  prompt: Why can a rename in a pipeline break a dashboard?
+  options:
+  - id: a
+    text: The Collector deletes the dashboard.
+    explanation: It does not touch dashboards.
+  - id: b
+    text: The span is dropped.
+    explanation: Only the attribute changes.
+  - id: c
+    text: The dashboard queries a name that the data no longer carries.
+    explanation: Correct. A removed name returns no data.
+  - id: d
+    text: The schema URL expires.
+    explanation: It does not expire.
+  correct_option: c
+  explanation: Consumers depend on attribute names.
+- id: ats076-final-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a safe rename
+  source_readings:
+  - sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+  prompt: Which pair of statements renames `http.method` safely?
+  options:
+  - id: a
+    text: "`delete_key` first, then `set`."
+    explanation: The copy then reads a missing value.
+  - id: b
+    text: "`set` to the stable name with a `where` clause on the legacy name, then
+      `delete_key` on the legacy name."
+    explanation: Correct. The where clause protects spans that use the stable name.
+  - id: c
+    text: "`set` without a where clause."
+    explanation: It can overwrite a stable value.
+  - id: d
+    text: Only `set`.
+    explanation: The legacy name stays.
+  correct_option: b
+  explanation: Copy first, delete second, and guard the copy.
+- id: ats076-final-q14
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Plan the end of a window
+  source_readings:
+  - sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+  prompt: What must a dual emission window have?
+  options:
+  - id: a
+    text: A planned end, at which the legacy names are removed.
+    explanation: Correct. Without an end the legacy names stay forever.
+  - id: b
+    text: No end, because both names are needed for good.
+    explanation: The point is a migration.
+  - id: c
+    text: A delete statement from the start.
+    explanation: It defeats the window.
+  - id: d
+    text: Only one copy direction.
+    explanation: New services would lack the legacy name.
+  correct_option: a
+  explanation: A window needs a planned end.

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Schema Management Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-capstone-040
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: http-renamed
+      description: "http.method and http.status_code leave as http.request.method and http.response.status_code, without the legacy names"
+      type: file
+      source: validation/validate-http-renamed.sh
+      hint: "Copy the value to the stable name, then delete the legacy name, for each of the two attributes. Guard each copy with a where clause."
+    - name: peer-dual-emitted
+      description: "net.peer.name is kept and server.address is added with the same value"
+      type: file
+      source: validation/validate-peer-dual-emitted.sh
+      hint: "For this attribute the team keeps the legacy name for now. Copy the value to server.address and do not delete net.peer.name."
+    - name: others-and-new-style-kept
+      description: "Other attributes stay, and a span with only stable names keeps its values"
+      type: file
+      source: validation/validate-others-and-new-style-kept.sh
+      hint: "Use where clauses so statements do not copy a missing value."
+    - name: evidence-recorded
+      description: "The ConfigMap schema-evidence records the renamed and dual-emitted attributes and a UTC time"
+      type: file
+      source: validation/validate-evidence-recorded.sh
+      hint: "Create ConfigMap schema-evidence in observability with the keys renamed, dual-emitted and observed-at."
+
+teardown:
+  keepCluster: false

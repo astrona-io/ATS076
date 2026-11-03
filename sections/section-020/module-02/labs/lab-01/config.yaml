@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Find A Processor That Drops Too Much (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-020-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: normal-span-kept
+      description: "A span named POST /checkout reaches the debug exporter"
+      type: file
+      source: validation/validate-normal-span-kept.sh
+      hint: "A filter processor drops a span when a condition is true. Read the condition: which spans does it match today?"
+    - name: health-span-dropped
+      description: "A span named GET /healthz does not reach the debug exporter"
+      type: file
+      source: validation/validate-health-span-dropped.sh
+      hint: "Keep the filter processor in the pipeline. Fix the condition so that only GET /healthz matches."
+    - name: metrics-endpoint-up
+      description: "The internal metrics endpoint on port 8888 lists the receiver accepted spans metric"
+      type: file
+      source: validation/validate-metrics-endpoint-up.sh
+      hint: "Do not change the service.telemetry block. The internal metrics are how you see accepted and sent counts."
+
+teardown:
+  keepCluster: false

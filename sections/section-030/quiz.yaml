@@ -1,0 +1,247 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-030
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-030
+  title: Error Handling
+questions:
+- id: ats076-030-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain which export errors are retried
+  source_readings:
+  - sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+  prompt: An exporter gets a 400 response for a batch. What happens?
+  options:
+  - id: a
+    text: It is retried until `max_elapsed_time`.
+    explanation: Only retryable errors are retried.
+  - id: b
+    text: The batch is dropped at once, because retrying the same request fails the
+      same way.
+    explanation: Correct. A 400 is a permanent error.
+  - id: c
+    text: It is moved to the end of the queue.
+    explanation: A permanent error is not queued again.
+  - id: d
+    text: It is sent to the debug exporter.
+    explanation: Exporters do not do this.
+  correct_option: b
+  explanation: Permanent errors are dropped without a retry.
+- id: ats076-030-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read the queue size unit
+  source_readings:
+  - sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+  prompt: "`sending_queue` has `queue_size: 5000` with the default sizer. What does
+    the number count?"
+  options:
+  - id: a
+    text: Batches (requests).
+    explanation: Correct. The default unit of the queue is a batch.
+  - id: b
+    text: Spans.
+    explanation: A batch can hold many spans.
+  - id: c
+    text: Bytes.
+    explanation: A byte-based sizer must be selected explicitly.
+  - id: d
+    text: Seconds.
+    explanation: The size is not a time.
+  correct_option: a
+  explanation: Check the sizer before calculating capacity.
+- id: ats076-030-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret an enqueue failure
+  source_readings:
+  - sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+  prompt: "`otelcol_exporter_enqueue_failed_spans` rises during a backend outage.
+    Which setting is too small?"
+  options:
+  - id: a
+    text: The retry interval.
+    explanation: The batches were never queued.
+  - id: b
+    text: The container memory request.
+    explanation: The counter measures the queue.
+  - id: c
+    text: The receiver timeout.
+    explanation: The receiver is not the stage that refuses.
+  - id: d
+    text: The queue size.
+    explanation: Correct. A batch that cannot be placed in a full queue is refused.
+  correct_option: d
+  explanation: Enqueue failures mean the queue was full.
+- id: ats076-030-q04
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Size a queue
+  source_readings:
+  - sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+  prompt: An exporter receives 10 batches per second, and the backend can be down
+    for 2 minutes. What queue size covers the outage?
+  options:
+  - id: a
+    text: 120 batches.
+    explanation: That is 10 batches per second for 12 seconds.
+  - id: b
+    text: 12000 batches.
+    explanation: That is ten times the need.
+  - id: c
+    text: 1200 batches.
+    explanation: Correct. 10 batches per second for 120 seconds.
+  - id: d
+    text: 600 batches.
+    explanation: That is only one minute.
+  correct_option: c
+  explanation: Rate multiplied by outage length gives the batches needed.
+- id: ats076-030-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Keep a queue across a restart
+  source_readings:
+  - sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+  prompt: A Collector restarts while the backend is down, and the queued data is lost.
+    What keeps the queue across a restart?
+  options:
+  - id: a
+    text: A larger `queue_size`.
+    explanation: A larger queue in memory is still lost at a restart.
+  - id: b
+    text: A storage extension such as `file_storage`, referenced by the queue, on
+      a volume that survives.
+    explanation: Correct. The queue then writes batches to disk.
+  - id: c
+    text: A longer `max_elapsed_time`.
+    explanation: Retry time does not protect memory that is gone.
+  - id: d
+    text: A second receiver.
+    explanation: A receiver does not store exporter data.
+  correct_option: b
+  explanation: A queue in memory does not survive a restart.
+- id: ats076-030-q06
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Find an unlisted storage extension
+  source_readings:
+  - sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+  prompt: "`storage: file_storage/queue` is set in the queue and the extension is
+    defined, but it is not in `service.extensions`. What is the effect?"
+  options:
+  - id: a
+    text: The extension does not start, so the queue cannot use it.
+    explanation: Correct. Only extensions named by the service section start.
+  - id: b
+    text: The queue uses the disk anyway.
+    explanation: The storage component is not running.
+  - id: c
+    text: The queue falls back to a larger memory size.
+    explanation: There is no such fallback.
+  - id: d
+    text: Nothing, because the definition is enough.
+    explanation: A definition without a listing does not run.
+  correct_option: a
+  explanation: List the extension under `service.extensions`.
+- id: ats076-030-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Calculate the soft limit
+  source_readings:
+  - sections/section-030/module-02/course-01-the-memory-limiter.md
+  prompt: "`memory_limiter` has `limit_mib: 200` and `spike_limit_mib: 40`. At what
+    memory use does it start to refuse data?"
+  options:
+  - id: a
+    text: 200 MiB.
+    explanation: That is the hard limit.
+  - id: b
+    text: 240 MiB.
+    explanation: The limits are not added.
+  - id: c
+    text: 40 MiB.
+    explanation: That is the spike limit.
+  - id: d
+    text: 160 MiB.
+    explanation: Correct. The soft limit is `limit_mib` minus `spike_limit_mib`.
+  correct_option: d
+  explanation: Refusal starts at the soft limit.
+- id: ats076-030-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Place the memory limiter
+  source_readings:
+  - sections/section-030/module-02/course-01-the-memory-limiter.md
+  prompt: Why must `memory_limiter` be the first processor?
+  options:
+  - id: a
+    text: It would not start in another position.
+    explanation: The configuration is valid in any order.
+  - id: b
+    text: It sorts the spans for the other processors.
+    explanation: It does not sort data.
+  - id: c
+    text: A processor before it handles data that it should have refused, and that
+      work uses memory.
+    explanation: Correct. The limiter refuses data before other processors allocate
+      for it.
+  - id: d
+    text: It must be first to be counted by the metrics.
+    explanation: Position does not change the metrics.
+  correct_option: c
+  explanation: The configuration is valid in any order, and the fault shows under
+    a spike.
+- id: ats076-030-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Compare limiter and container limits
+  source_readings:
+  - sections/section-030/module-02/course-01-the-memory-limiter.md
+  prompt: 'A container has a 512 MiB memory limit and `limit_mib: 600`. What happens
+    in a spike?'
+  options:
+  - id: a
+    text: The limiter refuses data at 600 MiB.
+    explanation: The container does not get that far.
+  - id: b
+    text: The container is killed at 512 MiB before the limiter reaches its hard limit.
+    explanation: Correct. The limiter must act below the container limit.
+  - id: c
+    text: The limiter lowers its own limit.
+    explanation: It does not change its settings.
+  - id: d
+    text: Kubernetes raises the limit.
+    explanation: It does not raise a memory limit.
+  correct_option: b
+  explanation: Keep the hard limit below the container limit with room for the runtime.
+- id: ats076-030-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe what a refusal does to a sender
+  source_readings:
+  - sections/section-030/module-02/course-02-refusing-data-and-its-effect-on-senders.md
+  prompt: The memory limiter refuses data. Which side holds the refused spans?
+  options:
+  - id: a
+    text: The sender, when it retries the retryable error.
+    explanation: Correct. The Collector never accepted them.
+  - id: b
+    text: The Collector queue.
+    explanation: Refused data is not queued.
+  - id: c
+    text: The backend.
+    explanation: The data never reached it.
+  - id: d
+    text: The debug exporter.
+    explanation: It only prints accepted spans.
+  correct_option: a
+  explanation: A refusal moves the waiting to the sender.

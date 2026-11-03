@@ -1,9 +1,10 @@
-# Reading-only content; YAML knowledge checks have a separate index.
+# Course manifest for ATS076. Each section lists its README, modules (landing, parts, lab Question reading and lab entry after the part tested, summary), a capstone and a quiz.
 training:
   id: ATS076
   title: 'OTCA: Maintaining and Debugging Observability Pipelines'
-  description: 'Detailed reading material and reusable YAML knowledge checks for OTCA: Maintaining and
-    Debugging Observability Pipelines. Technical content remains draft. No labs or playgrounds.'
+  description: Concept lessons, diagrams, playgrounds, graded labs, capstones and
+    original scenario quizzes covering every published objective in this OTCA domain.
+    Labs run on kind (Kubernetes 1.35) with the OpenTelemetry Collector.
   certification:
     name: OpenTelemetry Certified Associate
     code: OTCA
@@ -18,7 +19,7 @@ training:
 modules:
 - id: module-intro
   title: Introduction
-  description: Audience, reading method and review process.
+  description: Audience, learning approach, requirements and contribution process.
   content:
   - type: reading
     title: Introduction
@@ -34,69 +35,458 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Context Propagation
-  description: Developed reading and reasoning for Context Propagation.
-  maturity: alpha
+  description: 'Makes the reader able to find where a trace is cut in two and to decide
+    which context may cross a trust boundary: the traceparent and tracestate headers,
+    a hop-by-hop test that finds the proxy that removes them, baggage, and removal
+    of untrusted baggage at a public edge.'
   content:
   - type: reading
-    title: Context Propagation
+    title: Section Overview
     path: sections/section-010/README.md
   - type: reading
-    title: Broken Trace Relationships And Propagation Diagnosis
+    title: Trace Context Across Process Boundaries
     path: sections/section-010/module-01/course.md
   - type: reading
-    title: Broken Trace Relationships And Propagation Diagnosis
-    path: sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
+    title: The Trace Context Headers
+    path: sections/section-010/module-01/course-01-the-trace-context-headers.md
+  - type: reading
+    title: Finding Where The Context Stops
+    path: sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Restore Trace Context Through A Gateway Lab
+    path: sections/section-010/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: context-propagation
+    task_kind: fix
+    tags:
+    - traceparent
+    - tracestate
+    - nginx
+    - proxy
+    - propagation
+    learning_goals:
+    - Find the proxy that removes the W3C Trace Context headers with a request to
+      each hop
+    - Remove the rules that hide the headers and restart the proxy
+    - Prove that both traceparent and tracestate reach the upstream
+    resources:
+    - name: W3C Trace Context
+      url: https://www.w3.org/TR/trace-context/
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
   - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
+    path: sections/section-010/module-01/course-03-summary.md
+  - type: reading
+    title: Baggage And Trust Boundaries
+    path: sections/section-010/module-02/course.md
+  - type: reading
+    title: Baggage And How It Travels
+    path: sections/section-010/module-02/course-01-baggage-and-how-it-travels.md
+  - type: reading
+    title: Untrusted Context At The Edge
+    path: sections/section-010/module-02/course-02-untrusted-context-at-the-edge.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Strip Baggage At The Public Edge Lab
+    path: sections/section-010/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: context-propagation
+    task_kind: fix
+    tags:
+    - baggage
+    - nginx
+    - trust-boundary
+    - propagation
+    learning_goals:
+    - Remove the baggage header on the public listener only
+    - Keep baggage and the trace context on the internal listener
+    - Restart the proxy and prove both listeners with requests
+    resources:
+    - name: W3C Baggage
+      url: https://www.w3.org/TR/baggage/
+    - name: W3C Trace Context
+      url: https://www.w3.org/TR/trace-context/
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-010/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Context Propagation Capstone
+    path: sections/section-010/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: context-propagation
+    task_kind: fix
+    tags:
+    - traceparent
+    - baggage
+    - nginx
+    - proxy
+    - evidence
+    learning_goals:
+    - Find the proxy in a chain of two that removes the trace context
+    - Drop baggage from public callers at the edge
+    - Record the evidence in a ConfigMap
+    resources:
+    - name: W3C Trace Context
+      url: https://www.w3.org/TR/trace-context/
+    - name: W3C Baggage
+      url: https://www.w3.org/TR/baggage/
+  - type: quiz
+    title: 'Knowledge Check: Context Propagation'
+    path: sections/section-010/quiz.yaml
+    pass_score: 70
 - id: module-020
   title: Debugging Pipelines
-  description: Developed reading and reasoning for Debugging Pipelines.
-  maturity: alpha
+  description: 'Makes the reader able to find the stage of a Collector pipeline that
+    loses telemetry: how components are started, evidence from the debug exporter,
+    the health check and the internal metrics, counters compared between stages, and
+    the processor rules that remove data.'
   content:
   - type: reading
-    title: Debugging Pipelines
+    title: Section Overview
     path: sections/section-020/README.md
   - type: reading
-    title: Intake, Processing And Export Failure Localization
+    title: Components And Pipelines
     path: sections/section-020/module-01/course.md
   - type: reading
-    title: Intake, Processing And Export Failure Localization
-    path: sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
+    title: How A Collector Builds Pipelines
+    path: sections/section-020/module-01/course-01-how-a-collector-builds-pipelines.md
+  - type: reading
+    title: Checking Intake With Debug, Health And Metrics
+    path: sections/section-020/module-01/course-02-checking-intake-with-debug-health-and-metrics.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Find The Receiver Missing From A Pipeline Lab
+    path: sections/section-020/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - receiver
+    - pipeline
+    - otlp
+    - debug
+    learning_goals:
+    - Read the Collector log and find which components started
+    - Add a defined receiver to the traces pipeline
+    - Prove intake with a span sent over OTLP/HTTP
+    resources:
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
+    - name: Collector troubleshooting
+      url: https://opentelemetry.io/docs/collector/troubleshooting/
   - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-02-summary.md
+    path: sections/section-020/module-01/course-03-summary.md
+  - type: reading
+    title: Locating Data Loss Between Stages
+    path: sections/section-020/module-02/course.md
+  - type: reading
+    title: Counting Items Between Stages
+    path: sections/section-020/module-02/course-01-counting-items-between-stages.md
+  - type: reading
+    title: Processors That Drop Data
+    path: sections/section-020/module-02/course-02-processors-that-drop-data.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Find A Processor That Drops Too Much Lab
+    path: sections/section-020/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - filter-processor
+    - metrics
+    - ottl
+    - pipeline
+    learning_goals:
+    - Compare receiver and exporter counters on port 8888
+    - Correct an inverted filter condition
+    - Prove that health spans are dropped and other spans pass
+    resources:
+    - name: Filter processor
+      url: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/filterprocessor/README.md
+    - name: Collector troubleshooting
+      url: https://opentelemetry.io/docs/collector/troubleshooting/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-020/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Debugging Pipelines Capstone
+    path: sections/section-020/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - receiver
+    - filter-processor
+    - health-check
+    - evidence
+    learning_goals:
+    - Fix a receiver that is not in the pipeline
+    - Fix a filter condition and an unlisted health check extension
+    - Record the cause of each fault in a ConfigMap
+    resources:
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
+    - name: Collector troubleshooting
+      url: https://opentelemetry.io/docs/collector/troubleshooting/
+  - type: quiz
+    title: 'Knowledge Check: Debugging Pipelines'
+    path: sections/section-020/quiz.yaml
+    pass_score: 70
 - id: module-030
   title: Error Handling
-  description: Developed reading and reasoning for Error Handling.
-  maturity: alpha
+  description: 'Makes the reader able to keep telemetry through an outage and a spike:
+    the path of a failed batch, retry and queue settings, queue sizing, persistent
+    storage, the memory limiter and what a refusal means for the senders.'
   content:
   - type: reading
-    title: Error Handling
+    title: Section Overview
     path: sections/section-030/README.md
   - type: reading
-    title: Bounded Queues, Retries And Observable Telemetry Loss
+    title: Exporter Retry And Queues
     path: sections/section-030/module-01/course.md
   - type: reading
-    title: Bounded Queues, Retries And Observable Telemetry Loss
-    path: sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
+    title: What Happens When An Export Fails
+    path: sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+  - type: reading
+    title: Sizing Queues And Persistent Storage
+    path: sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Survive A Backend Outage With Retry And A Queue Lab
+    path: sections/section-030/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 30m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - exporter
+    - retry
+    - sending-queue
+    - outage
+    learning_goals:
+    - Switch on retry_on_failure for an exporter
+    - Switch on sending_queue with a queue size of 5000
+    - Prove that a span accepted during a backend outage arrives later
+    resources:
+    - name: Exporter helper
+      url: https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/exporterhelper/README.md
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
   - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
+    path: sections/section-030/module-01/course-03-summary.md
+  - type: reading
+    title: Protecting The Collector Memory
+    path: sections/section-030/module-02/course.md
+  - type: reading
+    title: The Memory Limiter
+    path: sections/section-030/module-02/course-01-the-memory-limiter.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Order And Size The Memory Limiter Lab
+    path: sections/section-030/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - memory-limiter
+    - processor
+    - limits
+    learning_goals:
+    - Place the memory limiter first in the processors list
+    - Set limits that fit a 256Mi container
+    - Keep the other processor in the pipeline
+    resources:
+    - name: Memory limiter processor
+      url: https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/memorylimiterprocessor/README.md
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
+  - type: reading
+    title: Refusing Data And Its Effect On Senders
+    path: sections/section-030/module-02/course-02-refusing-data-and-its-effect-on-senders.md
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-030/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Error Handling Capstone
+    path: sections/section-030/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 40m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - retry
+    - sending-queue
+    - file-storage
+    - memory-limiter
+    - evidence
+    learning_goals:
+    - Order and size the memory limiter
+    - Enable retry, a queue and persistent storage for an exporter
+    - Record the configuration in a ConfigMap
+    resources:
+    - name: Exporter helper
+      url: https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/exporterhelper/README.md
+    - name: Memory limiter processor
+      url: https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/memorylimiterprocessor/README.md
+  - type: quiz
+    title: 'Knowledge Check: Error Handling'
+    path: sections/section-030/quiz.yaml
+    pass_score: 70
 - id: module-040
   title: Schema Management
-  description: Developed reading and reasoning for Schema Management.
-  maturity: alpha
+  description: 'Makes the reader able to keep telemetry usable while attribute names
+    change: semantic conventions, legacy and stable names, safe renames with the transform
+    processor, schema versions, consumer impact and a dual emission window.'
   content:
   - type: reading
-    title: Schema Management
+    title: Section Overview
     path: sections/section-040/README.md
   - type: reading
-    title: Schema Identity, Convention Migration And Consumer Compatibility
+    title: Semantic Conventions And Renaming
     path: sections/section-040/module-01/course.md
   - type: reading
-    title: Schema Identity, Convention Migration And Consumer Compatibility
-    path: sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
+    title: Semantic Conventions And Attribute Names
+    path: sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+  - type: reading
+    title: Renaming Attributes With OTTL
+    path: sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Rename Legacy HTTP Attributes In The Pipeline Lab
+    path: sections/section-040/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 30m
+    topic: collector
+    task_kind: build
+    tags:
+    - collector
+    - transform-processor
+    - ottl
+    - semantic-conventions
+    learning_goals:
+    - Add a transform processor that renames two legacy HTTP attributes
+    - Guard each copy so stable names are not overwritten
+    - Prove the rename with legacy and stable spans
+    resources:
+    - name: Transform processor
+      url: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/transformprocessor/README.md
+    - name: HTTP semantic conventions migration
+      url: https://opentelemetry.io/docs/specs/semconv/non-normative/http-migration/
   - type: reading
     title: Summary
-    path: sections/section-040/module-01/course-02-summary.md
+    path: sections/section-040/module-01/course-03-summary.md
+  - type: reading
+    title: Migration Windows
+    path: sections/section-040/module-02/course.md
+  - type: reading
+    title: Schema Versions And Compatibility For Consumers
+    path: sections/section-040/module-02/course-01-schema-versions-and-compatibility-for-consumers.md
+  - type: reading
+    title: Dual Emission During A Migration
+    path: sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Emit Both Attribute Names During A Migration Lab
+    path: sections/section-040/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: collector
+    task_kind: fix
+    tags:
+    - collector
+    - transform-processor
+    - ottl
+    - migration
+    - dual-emission
+    learning_goals:
+    - Replace deletes with copies in both directions
+    - Keep both names with equal values
+    - Leave other attributes unchanged
+    resources:
+    - name: Transform processor
+      url: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/transformprocessor/README.md
+    - name: OpenTelemetry semantic conventions
+      url: https://opentelemetry.io/docs/specs/semconv/
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-040/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Schema Management Capstone
+    path: sections/section-040/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: collector
+    task_kind: build
+    tags:
+    - collector
+    - transform-processor
+    - semantic-conventions
+    - dual-emission
+    - evidence
+    learning_goals:
+    - Rename two legacy HTTP attributes and remove the old names
+    - Emit net.peer.name and server.address together for a window
+    - Record the evidence in a ConfigMap
+    resources:
+    - name: Transform processor
+      url: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/transformprocessor/README.md
+    - name: HTTP semantic conventions migration
+      url: https://opentelemetry.io/docs/specs/semconv/non-normative/http-migration/
+  - type: quiz
+    title: 'Knowledge Check: Schema Management'
+    path: sections/section-040/quiz.yaml
+    pass_score: 70
+- id: module-final
+  title: Final Domain Check
+  description: A closing question set across all four sections.
+  content:
+  - type: quiz
+    title: Final Domain Quiz
+    path: sections/final-domain-quiz.yaml
+    pass_score: 70

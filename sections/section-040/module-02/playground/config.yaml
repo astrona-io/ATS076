@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Dual Emission During A Migration (PLAYGROUND). A clean sandbox: it starts, applies the example
+# workloads and the deliberate faults, then stays running for free
+# exploration. No task, no grading, no `astrona submit`. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-playground-040-02
+  docs:
+    guide: docs/overview.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  manifests:
+    - name: start
+      type: file
+      source: manifests/start.yaml
+  waitFor:
+    - resource: deploy/shuttle
+      namespace: starfleet
+    - resource: deploy/otelcol
+      namespace: observability
+
+teardown:
+  keepCluster: false

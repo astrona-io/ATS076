@@ -1,0 +1,249 @@
+# Knowledge check for section 040. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-040
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-040
+  title: Schema Management
+questions:
+- id: ats076-040-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Recognize a mixed generation problem
+  source_readings:
+  - sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+  prompt: Half of the services send `http.method` and half send `http.request.method`.
+    A dashboard queries `http.request.method`. What does it show?
+  options:
+  - id: a
+    text: All traffic.
+    explanation: The query matches one name.
+  - id: b
+    text: Only the part of the traffic that uses the stable name, and no error appears.
+    explanation: Correct. Spans are accepted and stored under both names.
+  - id: c
+    text: An error from the Collector.
+    explanation: The Collector does not know the query.
+  - id: d
+    text: Nothing.
+    explanation: Spans with the stable name match.
+  correct_option: b
+  explanation: A mismatch of names loses data quietly.
+- id: ats076-040-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Know a stable HTTP attribute name
+  source_readings:
+  - sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+  prompt: Which stable attribute replaces `http.status_code`?
+  options:
+  - id: a
+    text: "`http.response.status_code`."
+    explanation: Correct. It is the stable name in the HTTP conventions.
+  - id: b
+    text: "`http.status`."
+    explanation: This name is not in the conventions.
+  - id: c
+    text: "`http.request.status_code`."
+    explanation: The status belongs to the response.
+  - id: d
+    text: "`status.code`."
+    explanation: This is not the HTTP name.
+  correct_option: a
+  explanation: Check the migration guide for the version in use.
+- id: ats076-040-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose the level of an attribute
+  source_readings:
+  - sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+  prompt: At which level of OTLP data is `service.name` set?
+  options:
+  - id: a
+    text: The span.
+    explanation: A span describes one operation.
+  - id: b
+    text: The scope.
+    explanation: The scope describes the instrumentation library.
+  - id: c
+    text: The exporter.
+    explanation: It is not a property of the exporter.
+  - id: d
+    text: The resource.
+    explanation: Correct. It describes the process that produced the data.
+  correct_option: d
+  explanation: A rule that targets the wrong level changes nothing.
+- id: ats076-040-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain a rename in OTTL
+  source_readings:
+  - sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+  prompt: Why does a rename with the transform processor use two statements?
+  options:
+  - id: a
+    text: The processor limits each statement to one attribute type.
+    explanation: There is no such limit.
+  - id: b
+    text: The second statement checks the first.
+    explanation: A delete does not check anything.
+  - id: c
+    text: There is a copy (`set`) and a delete (`delete_key`), and no single rename.
+    explanation: Correct. The copy comes first and the delete second.
+  - id: d
+    text: Two statements run faster.
+    explanation: Speed is not the reason.
+  correct_option: c
+  explanation: A rename is a copy followed by a delete.
+- id: ats076-040-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the where clause
+  source_readings:
+  - sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+  prompt: Why does the copy statement carry `where span.attributes["http.method"]
+    != nil`?
+  options:
+  - id: a
+    text: So that the statement runs faster.
+    explanation: It is for correctness.
+  - id: b
+    text: So that a span that already uses the stable name is not overwritten with
+      a missing value.
+    explanation: Correct. The statement then acts only on spans that have the legacy
+      name.
+  - id: c
+    text: Because `set` fails without it.
+    explanation: Without it the statement can run and write a missing value.
+  - id: d
+    text: To select the signal type.
+    explanation: The path prefix does that.
+  correct_option: b
+  explanation: Guard the copy so that new-style spans keep their values.
+- id: ats076-040-q06
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Find an unlisted processor
+  source_readings:
+  - sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+  prompt: The `transform/semconv` processor is defined, and the output still shows
+    `http.method`. What do you check first?
+  options:
+  - id: a
+    text: That the processor is listed in the traces pipeline and that the Collector
+      was restarted.
+    explanation: Correct. A defined processor does not run unless a pipeline lists
+      it.
+  - id: b
+    text: The exporter queue size.
+    explanation: The queue does not rename attributes.
+  - id: c
+    text: The schema URL.
+    explanation: It does not affect a processor.
+  - id: d
+    text: The memory limit.
+    explanation: It does not affect names.
+  correct_option: a
+  explanation: Defined is not the same as used.
+- id: ats076-040-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Treat a schema URL correctly
+  source_readings:
+  - sections/section-040/module-02/course-01-schema-versions-and-compatibility-for-consumers.md
+  prompt: A span has the stable HTTP names and a schema URL for an older version.
+    Which is right about the names?
+  options:
+  - id: a
+    text: The schema URL is right and the names are wrong.
+    explanation: The URL does not change the attributes.
+  - id: b
+    text: The Collector translates the names to the URL version.
+    explanation: Translation happens only where a component does it.
+  - id: c
+    text: The span is invalid.
+    explanation: The span is valid.
+  - id: d
+    text: The attribute names in the data are the fact, because the schema URL is
+      metadata.
+    explanation: Correct. Nothing forces the URL to match the names.
+  correct_option: d
+  explanation: Read real spans instead of trusting a schema URL.
+- id: ats076-040-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Judge the risk of a rename for consumers
+  source_readings:
+  - sections/section-040/module-02/course-01-schema-versions-and-compatibility-for-consumers.md
+  prompt: Which consumer is most dangerous to break with a rename, and why?
+  options:
+  - id: a
+    text: A dashboard, because it always crashes.
+    explanation: It shows empty panels, which are visible.
+  - id: b
+    text: A stored search, because it deletes data.
+    explanation: It returns fewer results.
+  - id: c
+    text: An alert rule, because it stops firing and nothing looks wrong.
+    explanation: Correct. A quiet alert is not noticed.
+  - id: d
+    text: A sampler, because it changes the schema URL.
+    explanation: A sampler does not change the URL.
+  correct_option: c
+  explanation: List the dashboards and alerts that use a name before a rename.
+- id: ats076-040-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Build a dual emission rule
+  source_readings:
+  - sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+  prompt: During a migration window every span must carry both names. Which statements
+    are needed?
+  options:
+  - id: a
+    text: One copy from legacy to stable.
+    explanation: New services still lack the legacy name.
+  - id: b
+    text: A copy in each direction, each with a where clause, and no delete.
+    explanation: Correct. Old services gain the stable name and new services gain
+      the legacy name.
+  - id: c
+    text: A copy and a delete for each name.
+    explanation: The delete removes the legacy name.
+  - id: d
+    text: Only `delete_key` for the stable names.
+    explanation: That removes the new names.
+  correct_option: b
+  explanation: A window needs both directions and no delete.
+- id: ats076-040-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Define the winner of a mixed span
+  source_readings:
+  - sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+  prompt: A span carries `http.method=GET` and `http.request.method=POST`. The first
+    statement copies legacy to stable and the second copies stable to legacy. What
+    are the values after the rule?
+  options:
+  - id: a
+    text: Both are `GET`.
+    explanation: Correct. The first statement overwrites the stable value, and the
+      second copies it back.
+  - id: b
+    text: Both are `POST`.
+    explanation: That needs the order of the statements reversed.
+  - id: c
+    text: The values stay different.
+    explanation: Each statement writes a value.
+  - id: d
+    text: Both attributes are removed.
+    explanation: There is no delete.
+  correct_option: a
+  explanation: The order of statements decides which value wins.

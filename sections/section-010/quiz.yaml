@@ -1,0 +1,268 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-010
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-010
+  title: Context Propagation
+questions:
+- id: ats076-010-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the fields of the traceparent header
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: Which field of the `traceparent` header changes at every hop of a request?
+  options:
+  - id: a
+    text: The trace-id.
+    explanation: The trace-id is shared by every span of the trace and never changes.
+  - id: b
+    text: The parent-id.
+    explanation: Correct. The sender writes the identifier of its own client span
+      there, so the receiver's new span names it as parent.
+  - id: c
+    text: The version.
+    explanation: The version names the header format and stays the same.
+  - id: d
+    text: The trace-flags.
+    explanation: The flags carry the sampled decision and are passed on as they are.
+  correct_option: b
+  explanation: Only the parent-id changes at each hop. The trace-id stays the same
+    for the whole trace.
+- id: ats076-010-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain what a receiver does with an invalid traceparent
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: A service receives a `traceparent` header whose trace-id is 32 zeros. What
+    does it do?
+  options:
+  - id: a
+    text: It ignores the header, starts a new trace and still serves the request.
+    explanation: Correct. An all-zero trace-id is invalid, and an invalid header is
+      ignored without an error for the caller.
+  - id: b
+    text: It rejects the request with an error.
+    explanation: Receivers do not refuse requests because of an invalid trace header.
+  - id: c
+    text: It uses the zeros as the trace-id of the new span.
+    explanation: An all-zero trace-id is not allowed as an identifier.
+  - id: d
+    text: It copies the header to the next hop unchanged.
+    explanation: A receiver that ignores the header has no context to pass on.
+  correct_option: a
+  explanation: An invalid traceparent is ignored and the receiver starts a new trace.
+- id: ats076-010-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the effect of a lost header on sampling
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: A caller records a trace and sends `traceparent` with the flag `01`. A proxy
+    removes the header. The next service uses `parentbased_traceidratio` with a ratio
+    of 0.1. What happens at that service?
+  options:
+  - id: a
+    text: It records the trace because the caller did.
+    explanation: The flag was removed with the header, so the service cannot follow
+      it.
+  - id: b
+    text: It never records the trace.
+    explanation: The ratio still lets about one in ten traces through.
+  - id: c
+    text: It records the trace and joins the caller's trace-id.
+    explanation: The trace-id was in the removed header, so the service starts a new
+      trace.
+  - id: d
+    text: It has no parent, so it is a root and records about one trace in ten.
+    explanation: Correct. Without a remote parent the sampler applies the ratio to
+      the trace-id of a new trace.
+  correct_option: d
+  explanation: The trace is cut in two and the second half is sampled with a different
+    rule.
+- id: ats076-010-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Diagnose a propagator mismatch
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: One service is set to `OTEL_PROPAGATORS=jaeger` and the service it calls
+    is set to `OTEL_PROPAGATORS=tracecontext`. No proxy changes headers. What does
+    the trace view show?
+  options:
+  - id: a
+    text: One connected trace.
+    explanation: The receiver finds no header it understands.
+  - id: b
+    text: One trace with a missing `tracestate`.
+    explanation: The receiver does not see the context at all.
+  - id: c
+    text: Two separate traces, because the receiver does not read the sender's header
+      format.
+    explanation: Correct. The sender writes `uber-trace-id`, and the receiver extracts
+      only `traceparent`.
+  - id: d
+    text: An error in the Collector.
+    explanation: The Collector only receives the finished spans and does not link
+      them.
+  correct_option: c
+  explanation: Different formats on the two sides break the trace without any proxy.
+- id: ats076-010-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find the hop that removes a header with a request
+  source_readings:
+  - sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+  prompt: A request with `traceparent` sent directly to the `probe` shows the header
+    in the echo. The same request sent through the `gateway` shows no header. Which
+    component removes it?
+  options:
+  - id: a
+    text: The `probe`.
+    explanation: The direct request showed that the probe receives and reports the
+      header.
+  - id: b
+    text: The `gateway`.
+    explanation: Correct. The only component between the sender and the probe is the
+      gateway.
+  - id: c
+    text: The sending application.
+    explanation: The same sender produced both requests, and one showed the header.
+  - id: d
+    text: The Collector.
+    explanation: The Collector is not on the request path.
+  correct_option: b
+  explanation: Ask each hop what it received. The first hop where the header is missing
+    is the fault.
+- id: ats076-010-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain how a proxy removes a header
+  source_readings:
+  - sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+  prompt: An nginx location contains `proxy_set_header traceparent "";`. What is the
+    effect on requests that pass through it?
+  options:
+  - id: a
+    text: The header is not passed to the upstream.
+    explanation: Correct. nginx does not pass on a header with an empty value.
+  - id: b
+    text: The header is copied unchanged.
+    explanation: The directive overrides the copy with an empty value.
+  - id: c
+    text: The header is set to a random value.
+    explanation: The value is empty, not random.
+  - id: d
+    text: The request is rejected.
+    explanation: The request is served, only without the header.
+  correct_option: a
+  explanation: An empty value removes the header from the upstream request.
+- id: ats076-010-q07
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Apply a proxy configuration change
+  source_readings:
+  - sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+  prompt: The ConfigMap with the nginx configuration is corrected, and the `gateway`
+    still removes the header. What is missing?
+  options:
+  - id: a
+    text: A new image.
+    explanation: The configuration is not part of the image.
+  - id: b
+    text: A change of the Service port.
+    explanation: The port is not related to the header.
+  - id: c
+    text: A new trace-id in the test.
+    explanation: The trace-id does not change how nginx reads its file.
+  - id: d
+    text: A restart of the Deployment, because nginx reads its configuration at start.
+    explanation: Correct. Until the pods restart, the running process keeps the old
+      rules.
+  correct_option: d
+  explanation: Restart the proxy after a configuration change.
+- id: ats076-010-q08
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Describe what baggage is
+  source_readings:
+  - sections/section-010/module-02/course-01-baggage-and-how-it-travels.md
+  prompt: What does the `baggage` header carry?
+  options:
+  - id: a
+    text: The trace-id and parent-id of the request.
+    explanation: Those fields are in `traceparent`.
+  - id: b
+    text: The sampling decision of the trace.
+    explanation: The sampled flag is in `traceparent`.
+  - id: c
+    text: Application key and value pairs that travel with the request to every downstream
+      service.
+    explanation: Correct. It is a separate header from the trace context and holds
+      data that the application chose to propagate.
+  - id: d
+    text: The attributes of every span in the trace.
+    explanation: Baggage is not copied into span attributes by itself.
+  correct_option: c
+  explanation: Baggage is application data that travels with the request.
+- id: ats076-010-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Decide where untrusted baggage must be removed
+  source_readings:
+  - sections/section-010/module-02/course-02-untrusted-context-at-the-edge.md
+  prompt: A public listener and an internal listener of an `edge` proxy both forward
+    to internal services. Public callers can send any `baggage` header. Which change
+    is correct?
+  options:
+  - id: a
+    text: Remove `baggage` on both listeners.
+    explanation: Internal services that rely on baggage from trusted callers would
+      break.
+  - id: b
+    text: Remove `baggage` on the public listener only.
+    explanation: Correct. Public callers are untrusted, and internal callers send
+      baggage that services need.
+  - id: c
+    text: Remove `traceparent` on the public listener.
+    explanation: That would cut every trace that enters from outside and does not
+      address baggage.
+  - id: d
+    text: Keep both listeners as they are.
+    explanation: A caller can then place values in baggage that internal services
+      read.
+  correct_option: b
+  explanation: Treat headers from outside the trust boundary as untrusted and drop
+    what they must not set.
+- id: ats076-010-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish a quiet fault from a broken trace
+  source_readings:
+  - sections/section-010/module-01/course-01-the-trace-context-headers.md
+  prompt: A proxy forwards `traceparent` and removes `tracestate`. What is the effect
+    on the trace?
+  options:
+  - id: a
+    text: The trace stays connected and only vendor data is lost.
+    explanation: Correct. Only `traceparent` carries the trace identity.
+  - id: b
+    text: The trace is cut in two.
+    explanation: The trace-id and parent-id are intact.
+  - id: c
+    text: Every span is dropped.
+    explanation: Spans are recorded and exported as before.
+  - id: d
+    text: The sampler stops working.
+    explanation: The sampled flag is in `traceparent`.
+  correct_option: a
+  explanation: A missing `tracestate` loses vendor data and does not break the tree.

@@ -1,0 +1,247 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-020
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-020
+  title: Debugging Pipelines
+questions:
+- id: ats076-020-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain which components start
+  source_readings:
+  - sections/section-020/module-01/course-01-how-a-collector-builds-pipelines.md
+  prompt: A configuration defines an `otlp/http` receiver, and no pipeline lists it.
+    What happens?
+  options:
+  - id: a
+    text: The Collector refuses to start.
+    explanation: An unused definition is valid.
+  - id: b
+    text: The Collector starts without it and reports no error.
+    explanation: Correct. Only components named by the service section are started.
+  - id: c
+    text: The receiver starts and drops data.
+    explanation: It is not started, so it does not accept anything.
+  - id: d
+    text: The receiver starts on a random port.
+    explanation: It does not start and has no port.
+  correct_option: b
+  explanation: A defined component that nothing names is silent.
+- id: ats076-020-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe the data flow of a pipeline
+  source_readings:
+  - sections/section-020/module-01/course-01-how-a-collector-builds-pipelines.md
+  prompt: A traces pipeline lists two exporters. How many copies of the processed
+    spans does the Collector send?
+  options:
+  - id: a
+    text: Each exporter receives the processed spans.
+    explanation: Correct. The output of the last processor goes to every exporter
+      of the pipeline.
+  - id: b
+    text: Only the first exporter receives them.
+    explanation: All listed exporters receive them.
+  - id: c
+    text: The exporters split the spans between them.
+    explanation: Every exporter receives the full set.
+  - id: d
+    text: Only the exporter with a queue receives them.
+    explanation: A queue is not a condition for receiving data.
+  correct_option: a
+  explanation: Exporters of one pipeline receive the same processed data.
+- id: ats076-020-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Use the debug exporter
+  source_readings:
+  - sections/section-020/module-01/course-02-checking-intake-with-debug-health-and-metrics.md
+  prompt: 'What does the `debug` exporter with `verbosity: detailed` give you?'
+  options:
+  - id: a
+    text: It sends the spans to a backend.
+    explanation: It writes to the log only.
+  - id: b
+    text: It repairs broken spans.
+    explanation: It does not change data.
+  - id: c
+    text: It counts the spans for the metrics.
+    explanation: Counters come from the internal telemetry, not from this exporter.
+  - id: d
+    text: It prints the spans that reach it, including attributes, to the Collector
+      log.
+    explanation: Correct. It is a diagnostic exporter and a way to see what arrives
+      at the end of the pipeline.
+  correct_option: d
+  explanation: The debug exporter shows what the pipeline delivers.
+- id: ats076-020-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret the health check
+  source_readings:
+  - sections/section-020/module-01/course-02-checking-intake-with-debug-health-and-metrics.md
+  prompt: The health check on port 13133 answers `200`, and no spans arrive at the
+    backend. What can you conclude?
+  options:
+  - id: a
+    text: That the pipeline works.
+    explanation: A healthy process can still have a broken pipeline.
+  - id: b
+    text: That the receiver accepts data.
+    explanation: The check does not cover receivers.
+  - id: c
+    text: Only that the process and the extension run, not that a pipeline delivers.
+    explanation: Correct. The extension does not check pipelines.
+  - id: d
+    text: That the exporter reaches the backend.
+    explanation: The check does not cover exporters.
+  correct_option: c
+  explanation: A `200` shows that the process runs, not that data is delivered.
+- id: ats076-020-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find an unlisted extension
+  source_readings:
+  - sections/section-020/module-01/course-02-checking-intake-with-debug-health-and-metrics.md
+  prompt: An extension `health_check` is defined, and port 13133 refuses connections.
+    Which setting is a likely cause?
+  options:
+  - id: a
+    text: The receiver is missing from the pipeline.
+    explanation: The receiver does not affect the health check.
+  - id: b
+    text: The extension is missing from `service.extensions`.
+    explanation: Correct. A defined extension that is not listed is not started.
+  - id: c
+    text: The exporter queue is full.
+    explanation: A full queue does not close the extension port.
+  - id: d
+    text: The memory limiter is first.
+    explanation: The limiter does not open or close ports.
+  correct_option: b
+  explanation: Extensions start only when `service.extensions` lists them.
+- id: ats076-020-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Locate a stage with counters
+  source_readings:
+  - sections/section-020/module-02/course-01-counting-items-between-stages.md
+  prompt: The receiver accepted 10 spans. A processor shows 10 incoming and 3 outgoing
+    items. Which stage removes data?
+  options:
+  - id: a
+    text: That processor.
+    explanation: Correct. The count falls between its incoming and outgoing values.
+  - id: b
+    text: The receiver.
+    explanation: The receiver passed all 10 on.
+  - id: c
+    text: The exporter.
+    explanation: The exporter never saw the 7 missing items.
+  - id: d
+    text: The sender.
+    explanation: The Collector accepted all 10.
+  correct_option: a
+  explanation: Compare neighbouring counters in pipeline order.
+- id: ats076-020-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read a filter condition
+  source_readings:
+  - sections/section-020/module-02/course-02-processors-that-drop-data.md
+  prompt: 'A `filter` processor has `trace_conditions: [span.name != "GET /healthz"]`.
+    Which spans does it drop?'
+  options:
+  - id: a
+    text: Only `GET /healthz`.
+    explanation: That is the intent, and the condition says the opposite.
+  - id: b
+    text: No span.
+    explanation: A true condition drops the span.
+  - id: c
+    text: Only spans without a name.
+    explanation: The comparison covers every other name.
+  - id: d
+    text: Every span whose name is not `GET /healthz`.
+    explanation: Correct. A condition names what to drop.
+  correct_option: d
+  explanation: An inverted condition keeps health checks and drops everything else.
+- id: ats076-020-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Combine filter conditions
+  source_readings:
+  - sections/section-020/module-02/course-02-processors-that-drop-data.md
+  prompt: A filter lists two conditions. A span matches only the second. What happens?
+  options:
+  - id: a
+    text: The span passes.
+    explanation: Conditions in a list are combined with OR.
+  - id: b
+    text: The span is dropped only if it matches both.
+    explanation: Use `and` inside one condition for that.
+  - id: c
+    text: The span is dropped.
+    explanation: Correct. A match on any condition of the list drops the span.
+  - id: d
+    text: The Collector reports an error.
+    explanation: A partial match is not an error.
+  correct_option: c
+  explanation: A list of conditions drops a span when any one is true.
+- id: ats076-020-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Choose an error mode for a drop rule
+  source_readings:
+  - sections/section-020/module-02/course-02-processors-that-drop-data.md
+  prompt: Which `error_mode` is the safe choice for a drop rule, and why?
+  options:
+  - id: a
+    text: "`propagate`, because errors must stop the pipeline."
+    explanation: The error returns and the data is dropped.
+  - id: b
+    text: "`ignore`, because a condition that cannot be evaluated does not match and
+      the span passes."
+    explanation: Correct. The error is logged and no data is removed.
+  - id: c
+    text: "`silent`, because it hides the error from operators."
+    explanation: It also keeps the data, but the error is not logged, which hides
+      the fault.
+  - id: d
+    text: No setting is needed.
+    explanation: The default can differ by version and should be stated.
+  correct_option: b
+  explanation: A drop rule should not remove data on an error.
+- id: ats076-020-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Apply a configuration change
+  source_readings:
+  - sections/section-020/module-02/course-01-counting-items-between-stages.md
+  prompt: The ConfigMap with the Collector configuration is corrected, and the Collector
+    behaves as before. What is missing?
+  options:
+  - id: a
+    text: A restart of the Collector, because it reads the file at start.
+    explanation: Correct. The running process holds the old configuration.
+  - id: b
+    text: A new receiver port.
+    explanation: The port is not related.
+  - id: c
+    text: A new exporter.
+    explanation: No exporter is missing.
+  - id: d
+    text: A longer wait for the metrics.
+    explanation: Counters do not reload the file.
+  correct_option: a
+  explanation: Restart the Collector after a change.

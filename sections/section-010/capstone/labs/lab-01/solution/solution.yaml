@@ -1,0 +1,51 @@
+# Reference solution for Context Propagation Capstone.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-conf
+  namespace: starfleet
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://probe.starfleet.svc.cluster.local:80;
+          proxy_set_header Host $host;
+
+        }
+      }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: edge-conf
+  namespace: starfleet
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://gateway.starfleet.svc.cluster.local:80;
+          proxy_set_header Host $host;
+          proxy_set_header baggage "";
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: propagation-evidence
+  namespace: starfleet
+data:
+  boundary: "gateway removed traceparent and tracestate; edge forwarded baggage from public callers"
+  traceparent: "PASS: traceparent reaches the probe through edge and gateway"
+  baggage: "PASS: baggage does not reach the probe from the public edge"
+  observed-at: "OBSERVED_AT"

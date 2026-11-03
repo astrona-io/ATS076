@@ -1,0 +1,39 @@
+# Reference solution for Find The Receiver Missing From A Pipeline.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otelcol-config
+  namespace: observability
+data:
+  config.yaml: |
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+    receivers:
+      otlp/grpc:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+      otlp/http:
+        protocols:
+          http:
+            endpoint: 0.0.0.0:4318
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      extensions: [health_check]
+      telemetry:
+        metrics:
+          level: normal
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0
+                    port: 8888
+      pipelines:
+        traces:
+          receivers: [otlp/grpc, otlp/http]
+          exporters: [debug]

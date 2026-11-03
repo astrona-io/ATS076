@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Context Propagation Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-capstone-010
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - nginx:1.29-alpine
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: traceparent-reaches-probe
+      description: "traceparent sent to the edge reaches the probe through both proxies"
+      type: file
+      source: validation/validate-traceparent-reaches-probe.sh
+      hint: "Two proxies are in the chain. Check what each one does to traceparent, one hop at a time."
+    - name: tracestate-reaches-probe
+      description: "tracestate sent to the edge reaches the probe through both proxies"
+      type: file
+      source: validation/validate-tracestate-reaches-probe.sh
+      hint: "tracestate must follow traceparent through every hop."
+    - name: baggage-removed-at-edge
+      description: "baggage sent by a public caller does not reach the probe"
+      type: file
+      source: validation/validate-baggage-removed-at-edge.sh
+      hint: "The edge is the trust boundary. Remove baggage there."
+    - name: chain-serves
+      description: "The chain still serves requests and the original proxy images are unchanged"
+      type: file
+      source: validation/validate-chain-serves.sh
+      hint: "Fix configuration only. Do not delete a proxy or send traffic around it."
+    - name: evidence-recorded
+      description: "The ConfigMap propagation-evidence names the failing boundary and records the result"
+      type: file
+      source: validation/validate-evidence-recorded.sh
+      hint: "Create ConfigMap propagation-evidence in starfleet with the keys boundary, traceparent, baggage and observed-at. The boundary value must name gateway."
+
+teardown:
+  keepCluster: false

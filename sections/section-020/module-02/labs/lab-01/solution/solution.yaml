@@ -1,0 +1,41 @@
+# Reference solution for Find A Processor That Drops Too Much.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otelcol-config
+  namespace: observability
+data:
+  config.yaml: |
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+    receivers:
+      otlp:
+        protocols:
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      filter/health:
+        error_mode: ignore
+        trace_conditions:
+          - span.name == "GET /healthz"
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      extensions: [health_check]
+      telemetry:
+        metrics:
+          level: normal
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0
+                    port: 8888
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [filter/health]
+          exporters: [debug]

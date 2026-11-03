@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Survive A Backend Outage With Retry And A Queue (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-030-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: queue-capacity
+      description: "The exporter otlp_http/backend has a sending queue with capacity 5000"
+      type: file
+      source: validation/validate-queue-capacity.sh
+      hint: "Enable sending_queue on the exporter and set queue_size to 5000. The internal metric otelcol_exporter_queue_capacity shows the result."
+    - name: outage-survived
+      description: "A span sent while the backend is down reaches the backend after it returns"
+      type: file
+      source: validation/validate-outage-survived.sh
+      hint: "Both retry_on_failure and sending_queue must be enabled: the queue holds the batch and the retry sends it again later. This check stops the backend for a short time and starts it again."
+
+teardown:
+  keepCluster: false

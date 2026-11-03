@@ -1,6 +1,6 @@
 # Primary Authoring Sources
 
-[Official OTCA objectives](https://training.linuxfoundation.org/certification/opentelemetry-certified-associate-otca/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation paths are recorded per reading in AUTHORING.yaml. No runtime or command-output validation is claimed.
+[Official OTCA objectives](https://training.linuxfoundation.org/certification/opentelemetry-certified-associate-otca/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation paths are recorded per reading in AUTHORING.yaml. Labs and playgrounds are validated statically only; no runtime or command-output validation is claimed.
 
 - [Signals](https://opentelemetry.io/docs/concepts/signals/)
 - [Instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/)

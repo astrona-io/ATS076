@@ -1,23 +1,27 @@
 ---
 draft: true
 exam_objectives:
-- Error Handling
+  - Debugging Pipelines
 ---
-# Bounded Queues, Retries And Observable Telemetry Loss
+# Exporter Retry And Queues
 
-This module develops bounded Queues, Retries And Observable Telemetry Loss. Use the explanations to connect intended behavior with responsible components and observable evidence.
+When a backend is unreachable, an exporter either holds the data or drops it. This module explains the retry and queue settings that decide which, how to size a queue, and how to keep it across a restart.
 
 ## Learning Goals
 
-- Explain transient and permanent export failures.
-- Distinguish retry, buffering and persistent queue responsibilities.
-- Reason about duplicate delivery, backpressure and application safety.
+- Follow a batch through the exporter and say where it waits or is dropped.
+- Configure retry_on_failure and sending_queue for an exporter.
+- Estimate a queue size from a rate and an outage length.
+- Keep a queue across restarts with the file_storage extension.
 
 ## Before You Start
 
-Examples illustrate declared relationships and reasoning. No execution environment is required or claimed.
+You should know how a pipeline is built and how to read the internal metrics on port 8888.
 
 ## Reading Order
 
-1. Bounded Queues, Retries And Observable Telemetry Loss
-2. Summary
+1. What Happens When An Export Fails
+2. Sizing Queues And Persistent Storage
+3. Summary
+
+<!-- astrona:playground -->

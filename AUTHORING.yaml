@@ -1,5 +1,7 @@
+---
 version: 1
-approval: OTCA requested 2026-10-11; established reading-only scope
+approval: OTCA requested 2026-10-11; hands-on scope (playgrounds, labs, capstones,
+  quizzes)
 course:
   id: ATS076
   certification:
@@ -14,86 +16,156 @@ course:
     - Error Handling
     - Schema Management
 defaults:
-  playground: false
-  module_lab: false
-  capstone: false
-  section_quiz: false
+  playground: true
+  module_lab: true
+  capstone: true
+  section_quiz: true
   final_quiz: true
 assessment_format: YAML question banks v1, registered in assessments/index.yaml
 sections:
 - id: section-010
   title: Context Propagation
   curriculum_item: Context Propagation
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
-    title: Broken Trace Relationships And Propagation Diagnosis
+    title: Trace Context Across Process Boundaries
     objectives:
-    - Locate propagation failures along sender, carrier and receiver boundaries.
-    - Distinguish sampling gaps from missing context.
-    - Reason about asynchronous work and untrusted incoming identifiers.
+    - Describe the fields of traceparent and tracestate and what a receiver does with
+      them.
+    - Explain how a lost header splits a trace and changes sampling.
+    - Find the hop that removes a header.
     outline:
-    - Broken Trace Relationships And Propagation Diagnosis
-    playground: false
-    module_lab: false
+    - The Trace Context Headers
+    - Finding Where The Context Stops
+    playground: true
+    module_lab: true
     sources:
-    - reading: sections/section-010/module-01/course-01-broken-trace-relationships-and-propagation-diagnosis.md
-      adapted_from: null
+    - reading: sections/section-010/module-01/course-01-the-trace-context-headers.md
+      adapted_from: 
+    - reading: sections/section-010/module-01/course-02-finding-where-the-context-stops.md
+      adapted_from: 
+  - id: module-02
+    title: Baggage And Trust Boundaries
+    objectives:
+    - Explain baggage and why headers from outside a trust boundary are untrusted.
+    - Remove baggage from public callers only.
+    outline:
+    - Baggage And How It Travels
+    - Untrusted Context At The Edge
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-010/module-02/course-01-baggage-and-how-it-travels.md
+      adapted_from: 
+    - reading: sections/section-010/module-02/course-02-untrusted-context-at-the-edge.md
+      adapted_from: 
 - id: section-020
   title: Debugging Pipelines
   curriculum_item: Debugging Pipelines
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
-    title: Intake, Processing And Export Failure Localization
+    title: Components And Pipelines
     objectives:
-    - Trace missing telemetry through instrumentation, SDK, Collector and backend boundaries.
-    - Interpret internal diagnostics without assuming end-to-end delivery.
-    - Explain safe use and limits of diagnostic exporters.
+    - Explain which Collector components start.
+    - Use the debug exporter, health check and internal metrics as evidence.
     outline:
-    - Intake, Processing And Export Failure Localization
-    playground: false
-    module_lab: false
+    - How A Collector Builds Pipelines
+    - Checking Intake With Debug, Health And Metrics
+    playground: true
+    module_lab: true
     sources:
-    - reading: sections/section-020/module-01/course-01-intake-processing-and-export-failure-localization.md
-      adapted_from: null
+    - reading: sections/section-020/module-01/course-01-how-a-collector-builds-pipelines.md
+      adapted_from: 
+    - reading: sections/section-020/module-01/course-02-checking-intake-with-debug-health-and-metrics.md
+      adapted_from: 
+  - id: module-02
+    title: Locating Data Loss Between Stages
+    objectives:
+    - Compare counters between stages.
+    - Correct a filter condition that drops too much.
+    outline:
+    - Counting Items Between Stages
+    - Processors That Drop Data
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-02/course-01-counting-items-between-stages.md
+      adapted_from: 
+    - reading: sections/section-020/module-02/course-02-processors-that-drop-data.md
+      adapted_from: 
 - id: section-030
   title: Error Handling
   curriculum_item: Error Handling
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
-    title: Bounded Queues, Retries And Observable Telemetry Loss
+    title: Exporter Retry And Queues
     objectives:
-    - Explain transient and permanent export failures.
-    - Distinguish retry, buffering and persistent queue responsibilities.
-    - Reason about duplicate delivery, backpressure and application safety.
+    - Follow a failed batch through queue, retry and drop.
+    - Configure and size retry, queue and persistent storage.
     outline:
-    - Bounded Queues, Retries And Observable Telemetry Loss
-    playground: false
-    module_lab: false
+    - What Happens When An Export Fails
+    - Sizing Queues And Persistent Storage
+    playground: true
+    module_lab: true
     sources:
-    - reading: sections/section-030/module-01/course-01-bounded-queues-retries-and-observable-telemetry-loss.md
-      adapted_from: null
+    - reading: sections/section-030/module-01/course-01-what-happens-when-an-export-fails.md
+      adapted_from: 
+    - reading: sections/section-030/module-01/course-02-sizing-queues-and-persistent-storage.md
+      adapted_from: 
+  - id: module-02
+    title: Protecting The Collector Memory
+    objectives:
+    - Set and place the memory limiter.
+    - Explain what a refusal means for senders.
+    outline:
+    - The Memory Limiter
+    - Refusing Data And Its Effect On Senders
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-02/course-01-the-memory-limiter.md
+      adapted_from: 
+    - reading: sections/section-030/module-02/course-02-refusing-data-and-its-effect-on-senders.md
+      adapted_from: 
 - id: section-040
   title: Schema Management
   curriculum_item: Schema Management
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
-    title: Schema Identity, Convention Migration And Consumer Compatibility
+    title: Semantic Conventions And Renaming
     objectives:
-    - Explain schema metadata and semantic-convention compatibility.
-    - Distinguish producer change from pipeline delivery failure.
-    - Plan migration across instrumentation, transformations and queries.
+    - Explain semantic conventions and why names change.
+    - Rename attributes with the transform processor.
     outline:
-    - Schema Identity, Convention Migration And Consumer Compatibility
-    playground: false
-    module_lab: false
+    - Semantic Conventions And Attribute Names
+    - Renaming Attributes With OTTL
+    playground: true
+    module_lab: true
     sources:
-    - reading: sections/section-040/module-01/course-01-schema-identity-convention-migration-and-consumer-compatibility.md
-      adapted_from: null
+    - reading: sections/section-040/module-01/course-01-semantic-conventions-and-attribute-names.md
+      adapted_from: 
+    - reading: sections/section-040/module-01/course-02-renaming-attributes-with-ottl.md
+      adapted_from: 
+  - id: module-02
+    title: Migration Windows
+    objectives:
+    - Explain schema URLs and consumer impact.
+    - Build and prove a dual emission window.
+    outline:
+    - Schema Versions And Compatibility For Consumers
+    - Dual Emission During A Migration
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-02/course-01-schema-versions-and-compatibility-for-consumers.md
+      adapted_from: 
+    - reading: sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+      adapted_from: 

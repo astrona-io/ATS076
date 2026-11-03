@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Rename Legacy HTTP Attributes In The Pipeline (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-040-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: legacy-renamed
+      description: "A span with http.method and http.status_code leaves with http.request.method and http.response.status_code"
+      type: file
+      source: validation/validate-legacy-renamed.sh
+      hint: "Add a transform processor with span.attributes paths, set the new attributes from the old ones, delete the old ones, and list the processor in the traces pipeline."
+    - name: other-attributes-kept
+      description: "Other attributes of the span stay unchanged"
+      type: file
+      source: validation/validate-other-attributes-kept.sh
+      hint: "A statement must change only the attributes it names."
+    - name: new-style-unchanged
+      description: "A span that already uses the new names keeps its values"
+      type: file
+      source: validation/validate-new-style-unchanged.sh
+      hint: "Guard each set statement so it runs only where the old attribute exists: a statement that copies a missing value can erase the new one."
+
+teardown:
+  keepCluster: false

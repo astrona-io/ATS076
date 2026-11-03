@@ -1,23 +1,27 @@
 ---
 draft: true
 exam_objectives:
-- Schema Management
+  - Debugging Pipelines
 ---
-# Schema Identity, Convention Migration And Consumer Compatibility
+# Semantic Conventions And Renaming
 
-This module develops schema Identity, Convention Migration And Consumer Compatibility. Use the explanations to connect intended behavior with responsible components and observable evidence.
+Spans that arrive complete can still be unusable when consumers query names that the data does not carry. This module explains semantic conventions, why attribute names change between versions, and how the transform processor makes names uniform.
 
 ## Learning Goals
 
-- Explain schema metadata and semantic-convention compatibility.
-- Distinguish producer change from pipeline delivery failure.
-- Plan migration across instrumentation, transformations and queries.
+- Explain what the OpenTelemetry semantic conventions define.
+- Name common legacy and stable HTTP attribute names and where to verify them.
+- Write a transform processor rule that renames an attribute safely.
+- Prove a rename with a legacy span and a stable span.
 
 ## Before You Start
 
-Examples illustrate declared relationships and reasoning. No execution environment is required or claimed.
+You should know how a pipeline is built and how to read the debug exporter output.
 
 ## Reading Order
 
-1. Schema Identity, Convention Migration And Consumer Compatibility
-2. Summary
+1. Semantic Conventions And Attribute Names
+2. Renaming Attributes With OTTL
+3. Summary
+
+<!-- astrona:playground -->

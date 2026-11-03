@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Strip Baggage At The Public Edge (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-010-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - nginx:1.29-alpine
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: public-baggage-removed
+      description: "A baggage header sent to the public listener (port 80) does not reach the probe"
+      type: file
+      source: validation/validate-public-baggage-removed.sh
+      hint: "Add one proxy_set_header baggage \"\"; line to the server block that listens on port 80 only, then restart the edge Deployment."
+    - name: public-traceparent-kept
+      description: "A traceparent header sent to the public listener still reaches the probe"
+      type: file
+      source: validation/validate-public-traceparent-kept.sh
+      hint: "Remove baggage only. Trace context must keep flowing so the trace stays connected."
+    - name: internal-baggage-kept
+      description: "The internal listener (port 8081) still forwards baggage from trusted callers"
+      type: file
+      source: validation/validate-internal-baggage-kept.sh
+      hint: "Do not change the server block on port 8081. Internal callers are trusted and may pass baggage."
+
+teardown:
+  keepCluster: false

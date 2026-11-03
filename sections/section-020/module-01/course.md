@@ -1,23 +1,27 @@
 ---
 draft: true
 exam_objectives:
-- Debugging Pipelines
+  - Debugging Pipelines
 ---
-# Intake, Processing And Export Failure Localization
+# Components And Pipelines
 
-This module develops intake, Processing And Export Failure Localization. Use the explanations to connect intended behavior with responsible components and observable evidence.
+This module explains how the OpenTelemetry Collector turns a configuration into running pipelines, and how to collect evidence about what it accepts. It ends with the most common fault in a new configuration: a component that is defined but not used.
 
 ## Learning Goals
 
-- Trace missing telemetry through instrumentation, SDK, Collector and backend boundaries.
-- Interpret internal diagnostics without assuming end-to-end delivery.
-- Explain safe use and limits of diagnostic exporters.
+- Name the sections of a Collector configuration and say which of them start components.
+- Explain why a defined but unlisted receiver, processor or extension does nothing.
+- Use the debug exporter, the health check and the internal metrics as evidence.
+- Send a test span over OTLP/HTTP and trace it through the Collector.
 
 ## Before You Start
 
-Examples illustrate declared relationships and reasoning. No execution environment is required or claimed.
+You should know what a span is and how to read a YAML file. The hands-on part uses a playground with a kind cluster and `kubectl`.
 
 ## Reading Order
 
-1. Intake, Processing And Export Failure Localization
-2. Summary
+1. How A Collector Builds Pipelines
+2. Checking Intake With Debug, Health And Metrics
+3. Summary
+
+<!-- astrona:playground -->

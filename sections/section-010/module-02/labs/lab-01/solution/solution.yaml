@@ -1,0 +1,28 @@
+# Reference solution for Strip Baggage At The Public Edge.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: edge-conf
+  namespace: starfleet
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://probe.starfleet.svc.cluster.local:80;
+          proxy_set_header Host $host;
+          proxy_set_header baggage "";
+        }
+      }
+      server {
+        listen 8081;
+        location / {
+          proxy_pass http://probe.starfleet.svc.cluster.local:80;
+          proxy_set_header Host $host;
+
+        }
+      }
+    }

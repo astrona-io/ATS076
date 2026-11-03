@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Error Handling Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-capstone-030
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: memory-limiter-first
+      description: "memory_limiter is the first processor of the traces pipeline"
+      type: file
+      source: validation/validate-memory-limiter-first.sh
+      hint: "Edit the processors list in service.pipelines.traces. Keep it on one line in flow style."
+    - name: limit-fits-container
+      description: "limit_mib is between 1 and 200 and spike_limit_mib is below limit_mib"
+      type: file
+      source: validation/validate-limit-fits-container.sh
+      hint: "The container memory limit is 256Mi. Choose limit_mib at most 200."
+    - name: queue-capacity
+      description: "The exporter otlp_http/backend has a sending queue with capacity 5000"
+      type: file
+      source: validation/validate-queue-capacity.sh
+      hint: "Enable sending_queue and set queue_size to 5000."
+    - name: queue-persistent
+      description: "The sending queue stores its batches with the file_storage/queue extension"
+      type: file
+      source: validation/validate-queue-persistent.sh
+      hint: "Set storage: file_storage/queue on the sending queue and add file_storage/queue to service.extensions in flow style."
+    - name: outage-survived
+      description: "A span sent while the backend is down reaches the backend after it returns"
+      type: file
+      source: validation/validate-outage-survived.sh
+      hint: "Retry and the queue must both be enabled. This check stops the backend for a short time and starts it again."
+    - name: evidence-recorded
+      description: "The ConfigMap loss-evidence records retry, queue and memory decisions and a UTC time"
+      type: file
+      source: validation/validate-evidence-recorded.sh
+      hint: "Create ConfigMap loss-evidence in observability with the keys retry, queue, memory and observed-at."
+
+teardown:
+  keepCluster: false

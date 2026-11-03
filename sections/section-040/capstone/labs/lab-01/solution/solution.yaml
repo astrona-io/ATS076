@@ -1,0 +1,55 @@
+# Reference solution for Schema Management Capstone.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otelcol-config
+  namespace: observability
+data:
+  config.yaml: |
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+    receivers:
+      otlp:
+        protocols:
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      transform/semconv:
+        error_mode: ignore
+        trace_statements:
+          - set(span.attributes["http.request.method"], span.attributes["http.method"]) where span.attributes["http.method"] != nil
+          - delete_key(span.attributes, "http.method")
+          - set(span.attributes["http.response.status_code"], span.attributes["http.status_code"]) where span.attributes["http.status_code"] != nil
+          - delete_key(span.attributes, "http.status_code")
+          - set(span.attributes["server.address"], span.attributes["net.peer.name"]) where span.attributes["net.peer.name"] != nil
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      extensions: [health_check]
+      telemetry:
+        metrics:
+          level: normal
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0
+                    port: 8888
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [transform/semconv]
+          exporters: [debug]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: schema-evidence
+  namespace: observability
+data:
+  renamed: "http.method to http.request.method and http.status_code to http.response.status_code; legacy names removed"
+  dual-emitted: "net.peer.name is kept and server.address is added"
+  observed-at: "OBSERVED_AT"

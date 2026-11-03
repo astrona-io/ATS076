@@ -203,49 +203,54 @@ The course covers **Maintaining and Debugging Observability Pipelines**, worth *
 **OpenTelemetry Certified Associate (OTCA)**. It is part of **ATP015**.
 The official objectives are listed in `astrona.yaml` and mapped in `CURRICULUM.md`.
 
-### Reading-only scope
+### Hands-on scope
 
-The maintainer approved the lesson plan, asked for deeper teaching, and explicitly
-requested **no labs or playgrounds**. That instruction overrides shared examples
-about hands-on environments, graded labs and playground markers. Do not create
-runtime configurations, executable exercises or playground lifecycle markers.
-The course must be usable without a cluster or installed command-line tools.
+The maintainer lifted the earlier reading-only limit. The course has playgrounds,
+graded labs, capstones and quizzes. Every module has a playground at
+`module-NN/playground` and a graded lab at `module-NN/labs/lab-01`. Every section
+has a capstone lab at `capstone/labs/lab-01` and a `quiz.yaml`. The course ends
+with `sections/final-domain-quiz.yaml`. The shared rules for playgrounds, labs
+and the markers `astrona:playground`, `astrona:playground:renew` and
+`astrona:playground:destroy` apply.
+
+Labs and playgrounds run on kind with the OpenTelemetry Collector (contrib).
+Build them with the `astrona` CLI and check them with `astrona validate -c <dir>`,
+`bash -n` on every script and a YAML parse of every manifest. Do not claim a
+runtime result that nobody ran: every lab and playground README says UNTESTED
+until a person runs it.
 
 ### Teaching structure and depth
 
 Every section begins with its own introduction and measurable learning outcomes.
-Every module contains a landing page, developed teaching lessons and a final
-`# Summary` page. Put the summary after all its lessons and before the next
-module. This reading-only summary has no playground destruction marker.
+Every module contains a landing page, developed teaching parts and a final
+`# Summary` page that ends with `<!-- astrona:playground:destroy -->`. The lab
+`Question` reading and its `lab` entry follow the part they practise, and the
+section capstone and quiz follow the last module.
 
 Explain mechanisms, responsible components, realistic examples and the limits
 of each claim. Include worked reasoning and relevant failure cases. Avoid thin
-outlines, repetitive filler and invented command output. Split broad topics when
-needed; do not force a fixed number of lessons. The shared plain-English,
-self-contained-page and Mermaid rules apply throughout.
+outlines, repetitive filler and invented command output. Each module part has
+at least 90 lines. The shared plain-English, self-contained-page and Mermaid
+rules apply throughout.
 
-### Reusable question data
+### Quizzes
 
-Write original single-choice questions as YAML banks under section folders and
-`assessments/`. Use the versioned contract in `schemas/question-bank.schema.json`
-and teaching order in `assessments/index.yaml`. Each bank has 5–15 questions with
-stable IDs, one correct option, per-option feedback, a measurable learning
-objective and source reading paths for author traceability.
-
-Do not register YAML as a Markdown reading. A future renderer consumes the bank
-index and presents the checkpoint after its declared reading, preserving bank
-order when several share an anchor. Do not expose answer keys before submission
-in a production quiz interface. These public banks are practice material, not
-secure or official exam questions.
+Write original single-choice questions as YAML banks: `sections/section-0X0/quiz.yaml`
+(10 questions per section) and `sections/final-domain-quiz.yaml`. Each bank
+uses `schema_version: 1`, stable question IDs, one correct option, per-option
+feedback, a measurable learning objective and source reading paths for author
+traceability. Register each bank in `astrona.yaml` as a `type: quiz` entry with
+`pass_score: 70`. These banks are practice material, not secure or official
+exam questions.
 
 ### Review and authoring checks
 
 Preserve the shared CLAUDE.md prefix copied from ATS015. Keep course IDs, official
 domain weights and ATP links unchanged. Technical pages have `draft: true` in
-Markdown front matter until review; a module-level flag alone is insufficient.
-The ATP registration remains draft until publication is approved.
+Markdown front matter until review. The ATP registration remains draft until
+publication is approved.
 
 Primary author sources are recorded in `SOURCES.md`. The objective list was
-verified on 2026-10-11. Detailed reading expansions were written on 2026-10-11.
-Validate manifest paths, summary ordering, curriculum coverage and question
-contracts. Do not claim runtime verification for a reading-only course.
+verified on 2026-10-11. Validate manifest paths, summary ordering, curriculum
+coverage, question contracts and every lab and playground configuration.
+Progress is recorded in `.astrona/build-state.yaml`.

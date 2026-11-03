@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Restore Trace Context Through A Gateway (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-010-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - nginx:1.29-alpine
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: traceparent-forwarded
+      description: "The probe receives the traceparent header sent through the gateway"
+      type: file
+      source: validation/validate-traceparent-forwarded.sh
+      hint: "Look for proxy_set_header lines in the gateway configuration that set traceparent to an empty value. Remove only what hides the trace context, then restart the gateway Deployment."
+    - name: tracestate-forwarded
+      description: "The probe receives the tracestate header sent through the gateway"
+      type: file
+      source: validation/validate-tracestate-forwarded.sh
+      hint: "tracestate carries vendor data next to traceparent. A second proxy_set_header line may hide it."
+    - name: gateway-still-proxies
+      description: "The gateway still serves requests and runs its original image"
+      type: file
+      source: validation/validate-gateway-still-proxies.sh
+      hint: "Fix the configuration. Do not delete the gateway, change its image or point it at another upstream."
+
+teardown:
+  keepCluster: false
