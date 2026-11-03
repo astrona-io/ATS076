@@ -1,0 +1,20 @@
+# Reference solution for Forward Every Trace Header Format Through A Gateway.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-conf
+  namespace: starfleet
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://probe.starfleet.svc.cluster.local:80;
+          proxy_set_header Host $host;
+          proxy_set_header x-internal-debug "";
+        }
+      }
+    }

@@ -1,0 +1,244 @@
+# Knowledge check for module OTLP Responses And Retry Semantics. Listed in astrona.yaml as a `type: quiz` entry.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-030-m03
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: module
+  id: module-03
+  title: OTLP Responses And Retry Semantics
+questions:
+- id: ats076-030-m03-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the OTLP defaults
+  source_readings:
+  - sections/section-030/module-03/course-01-what-an-otlp-server-answers.md
+  prompt: Which default port does OTLP/HTTP use?
+  options:
+  - id: a
+    text: '4317.'
+    explanation: This is the default port of OTLP/gRPC.
+  - id: b
+    text: '8888.'
+    explanation: This is the default port of the Collector internal metrics.
+  - id: c
+    text: '4318.'
+    explanation: Correct. OTLP/HTTP uses 4318 and the paths `/v1/traces`, `/v1/metrics`
+      and `/v1/logs`.
+  - id: d
+    text: '13133.'
+    explanation: This is the default port of the health check.
+  correct_option: c
+  explanation: OTLP/HTTP defaults to port 4318.
+- id: ats076-030-m03-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain how the exporter builds the path
+  source_readings:
+  - sections/section-030/module-03/course-01-what-an-otlp-server-answers.md
+  prompt: 'You set `endpoint: http://backend:4318/v1/traces` on the Collector OTLP/HTTP
+    exporter. Which path does the request use?'
+  options:
+  - id: a
+    text: "`/v1/traces`."
+    explanation: That would happen only if the endpoint held the base URL.
+  - id: b
+    text: "`/`."
+    explanation: The exporter always adds a signal path.
+  - id: c
+    text: "`/v1/metrics`."
+    explanation: The path follows the signal, which is traces here.
+  - id: d
+    text: "`/v1/traces/v1/traces`."
+    explanation: Correct. The exporter appends the signal path to the endpoint, so
+      the path is doubled.
+  correct_option: d
+  explanation: The exporter adds the signal path itself, so the endpoint must be a
+    base URL.
+- id: ats076-030-m03-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Classify HTTP errors
+  source_readings:
+  - sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+  prompt: A destination answers 404 to an OTLP/HTTP export. What does the sender do?
+  options:
+  - id: a
+    text: It drops the data without a retry.
+    explanation: Correct. 404 is not in the list of retryable statuses.
+  - id: b
+    text: It retries until `max_elapsed_time`.
+    explanation: Retries apply only to 429, 502, 503 and 504.
+  - id: c
+    text: It retries once.
+    explanation: A permanent error is never retried.
+  - id: d
+    text: It switches to gRPC.
+    explanation: The sender does not change transport.
+  correct_option: a
+  explanation: A 404 is permanent.
+- id: ats076-030-m03-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: List retryable HTTP statuses
+  source_readings:
+  - sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+  prompt: Which HTTP statuses does an OTLP sender retry?
+  options:
+  - id: a
+    text: Every 5xx status.
+    explanation: A 500 is permanent.
+  - id: b
+    text: 429, 502, 503 and 504.
+    explanation: Correct. These are the statuses the specification marks as retryable.
+  - id: c
+    text: Every 4xx status.
+    explanation: Most 4xx statuses are permanent.
+  - id: d
+    text: 400 and 401.
+    explanation: Both are permanent.
+  correct_option: b
+  explanation: Only 429, 502, 503 and 504 are retried.
+- id: ats076-030-m03-q05
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Explain the RetryInfo rule
+  source_readings:
+  - sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+  prompt: When is the gRPC status `RESOURCE_EXHAUSTED` retryable?
+  options:
+  - id: a
+    text: Always.
+    explanation: Without `RetryInfo` it is permanent.
+  - id: b
+    text: Never.
+    explanation: With `RetryInfo` it is retryable.
+  - id: c
+    text: When the server sends a `RetryInfo` detail.
+    explanation: Correct. The delay in `RetryInfo` says when to try again.
+  - id: d
+    text: Only on the first request.
+    explanation: The first request has no special rule.
+  correct_option: c
+  explanation: It is retryable only with `RetryInfo`.
+- id: ats076-030-m03-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Handle a partial success
+  source_readings:
+  - sections/section-030/module-03/course-03-partial-success-and-rejected-items.md
+  prompt: 'A server answers HTTP 200 and a body with `rejectedSpans: 3`. What must
+    the sender do?'
+  options:
+  - id: a
+    text: Retry the whole request.
+    explanation: The same items would be rejected again.
+  - id: b
+    text: Retry only the rejected spans.
+    explanation: The sender does not know which spans were rejected.
+  - id: c
+    text: Drop the connection.
+    explanation: The request succeeded on the transport.
+  - id: d
+    text: Not retry, and log the error message.
+    explanation: Correct. A retry would store the accepted spans twice.
+  correct_option: d
+  explanation: A partial success must not be retried.
+- id: ats076-030-m03-q07
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Find evidence of a partial success
+  source_readings:
+  - sections/section-030/module-03/course-03-partial-success-and-rejected-items.md
+  prompt: Which evidence shows a partial success?
+  options:
+  - id: a
+    text: The exporter log message and a difference between sent and stored items.
+    explanation: Correct. The transport status is a success, so the evidence is in
+      the message and the data.
+  - id: b
+    text: The failed counter of the exporter.
+    explanation: The request succeeded, so it is not counted as failed.
+  - id: c
+    text: An HTTP 503 status.
+    explanation: A 503 is a retryable error, not a partial success.
+  - id: d
+    text: The health check.
+    explanation: The health check does not look at data.
+  correct_option: a
+  explanation: A partial success shows in the log message and in the data, not in
+    status codes.
+- id: ats076-030-m03-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Honor a server wait
+  source_readings:
+  - sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+  prompt: An overloaded server answers 503 with a `Retry-After` header. What should
+    the sender do?
+  options:
+  - id: a
+    text: Retry at once.
+    explanation: Immediate retries add load.
+  - id: b
+    text: Wait at least the given time, then retry.
+    explanation: Correct. The server asks for a delay to recover.
+  - id: c
+    text: Drop the data.
+    explanation: 503 is retryable.
+  - id: d
+    text: Send to another path.
+    explanation: The path is not the problem.
+  correct_option: b
+  explanation: The sender waits at least as long as the server asks.
+- id: ats076-030-m03-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Read retry settings
+  source_readings:
+  - sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+  prompt: 'What does `max_elapsed_time: 0s` mean in `retry_on_failure`?'
+  options:
+  - id: a
+    text: The sender does not retry.
+    explanation: 'Retries are switched off with `enabled: false`.'
+  - id: b
+    text: The sender retries once.
+    explanation: The setting bounds the total retry time.
+  - id: c
+    text: The sender never gives up on a batch.
+    explanation: Correct. A batch can stay in the queue as long as the error lasts.
+  - id: d
+    text: The sender waits zero seconds between retries.
+    explanation: The wait between retries is set by `initial_interval`.
+  correct_option: c
+  explanation: Zero means no time limit.
+- id: ats076-030-m03-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Diagnose a permanent error
+  source_readings:
+  - sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+  prompt: The exporter log says the data was dropped with status 404, and `retry_on_failure`
+    is enabled. What do you change?
+  options:
+  - id: a
+    text: "`max_elapsed_time`."
+    explanation: The error is not retried, so the limit is not reached.
+  - id: b
+    text: The queue size.
+    explanation: The queue is not full.
+  - id: c
+    text: The batch size.
+    explanation: The batch size does not change the path.
+  - id: d
+    text: The endpoint or path, because the status is permanent.
+    explanation: Correct. Retry settings never apply to a permanent error.
+  correct_option: d
+  explanation: A permanent error needs a change of the request, not of the retry settings.

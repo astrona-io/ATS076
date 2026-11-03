@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Fix An Exporter That Gets A Permanent Error (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-030-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: span-reaches-backend
+      description: "A span sent to the Collector reaches the backend"
+      type: file
+      source: validation/validate-span-reaches-backend.sh
+      hint: "The exporter adds /v1/traces to its endpoint itself. Read the drop line in the otelcol log and check the URL in the error text."
+    - name: no-failed-spans
+      description: "The exporter reports no failed spans"
+      type: file
+      source: validation/validate-no-failed-spans.sh
+      hint: "Counters start at zero when the Collector restarts, so a fixed Collector shows no failed spans for otlp_http/backend after a new span."
+    - name: pipeline-intact
+      description: "The exporter, the debug exporter and the backend are still in place"
+      type: file
+      source: validation/validate-pipeline-intact.sh
+      hint: "Keep the otlp_http/backend exporter and the debug exporter in the traces pipeline. Do not change the backend or its image."
+
+teardown:
+  keepCluster: false

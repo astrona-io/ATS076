@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Forward Every Trace Header Format Through A Gateway (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-010-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - nginx:1.29-alpine
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: b3-forwarded
+      description: "The probe receives the b3 header and the X-B3 headers sent through the gateway"
+      type: file
+      source: validation/validate-b3-forwarded.sh
+      hint: "Look for proxy_set_header lines that set b3 and the x-b3 headers to an empty value. A receiver that gets only some of the X-B3 headers ignores them all."
+    - name: jaeger-forwarded
+      description: "The probe receives the uber-trace-id header sent through the gateway"
+      type: file
+      source: validation/validate-jaeger-forwarded.sh
+      hint: "The Jaeger format is one header named uber-trace-id. A proxy_set_header line may hide it."
+    - name: internal-debug-still-hidden
+      description: "The gateway still removes x-internal-debug and still proxies"
+      type: file
+      source: validation/validate-internal-debug-hidden.sh
+      hint: "Keep the rule that removes x-internal-debug. It protects the system and is not part of the fault. Do not change the image or the upstream."
+
+teardown:
+  keepCluster: false

@@ -61,6 +61,27 @@ sections:
       adapted_from: 
     - reading: sections/section-010/module-02/course-02-untrusted-context-at-the-edge.md
       adapted_from: 
+  - id: module-03
+    title: Propagator Formats And Header Allow-lists
+    objectives:
+    - Name the header formats a fleet can use and the propagator that reads each.
+    - Keep every format and block internal-only headers in a proxy allow-list.
+    outline:
+    - One Span Context, Several Header Formats
+    - Mixed Fleets And Composite Propagators
+    - Proxies, Allow-lists And Browsers
+    - Proving Header Formats With Requests
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-010/module-03/course-01-one-span-context-several-header-formats.md
+      adapted_from: 
+    - reading: sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+      adapted_from: 
+    - reading: sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+      adapted_from: 
+    - reading: sections/section-010/module-03/course-04-proving-header-formats-with-requests.md
+      adapted_from: 
 - id: section-020
   title: Debugging Pipelines
   curriculum_item: Debugging Pipelines
@@ -96,6 +117,27 @@ sections:
     - reading: sections/section-020/module-02/course-01-counting-items-between-stages.md
       adapted_from: 
     - reading: sections/section-020/module-02/course-02-processors-that-drop-data.md
+      adapted_from: 
+  - id: module-03
+    title: Collector Diagnostic Extensions
+    objectives:
+    - Explain how an extension starts and why it must be in service.extensions.
+    - Reach zPages and pprof and choose the right diagnostic tool.
+    outline:
+    - What An Extension Is And How It Starts
+    - The zPages Extension
+    - The pprof Extension And The Health Check
+    - Choosing The Right Diagnostic Tool
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+      adapted_from: 
+    - reading: sections/section-020/module-03/course-02-the-zpages-extension.md
+      adapted_from: 
+    - reading: sections/section-020/module-03/course-03-the-pprof-extension-and-the-health-check.md
+      adapted_from: 
+    - reading: sections/section-020/module-03/course-04-choosing-the-right-diagnostic-tool.md
       adapted_from: 
 - id: section-030
   title: Error Handling
@@ -133,6 +175,27 @@ sections:
       adapted_from: 
     - reading: sections/section-030/module-02/course-02-refusing-data-and-its-effect-on-senders.md
       adapted_from: 
+  - id: module-03
+    title: OTLP Responses And Retry Semantics
+    objectives:
+    - Classify OTLP responses as retryable, permanent or partial success.
+    - Read the evidence of a failed export and fix its cause.
+    outline:
+    - What An OTLP Server Answers
+    - Retryable And Permanent Errors
+    - Partial Success And Rejected Items
+    - Throttling, Backoff And Failure Evidence
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-03/course-01-what-an-otlp-server-answers.md
+      adapted_from: 
+    - reading: sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+      adapted_from: 
+    - reading: sections/section-030/module-03/course-03-partial-success-and-rejected-items.md
+      adapted_from: 
+    - reading: sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+      adapted_from: 
 - id: section-040
   title: Schema Management
   curriculum_item: Schema Management
@@ -168,4 +231,25 @@ sections:
     - reading: sections/section-040/module-02/course-01-schema-versions-and-compatibility-for-consumers.md
       adapted_from: 
     - reading: sections/section-040/module-02/course-02-dual-emission-during-a-migration.md
+      adapted_from: 
+  - id: module-03
+    title: Schema Files And Transformations
+    objectives:
+    - Read a schema file and apply its transformations in both directions.
+    - Find where the schema URL travels and check a schema file by hand.
+    outline:
+    - The Layout Of A Schema File
+    - Transformations And Their Direction
+    - Schema URLs In OTLP Data
+    - Checking A Schema File By Hand
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+      adapted_from: 
+    - reading: sections/section-040/module-03/course-02-transformations-and-their-direction.md
+      adapted_from: 
+    - reading: sections/section-040/module-03/course-03-schema-urls-in-otlp-data.md
+      adapted_from: 
+    - reading: sections/section-040/module-03/course-04-checking-a-schema-file-by-hand.md
       adapted_from: 

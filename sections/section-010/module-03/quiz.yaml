@@ -1,0 +1,249 @@
+# Knowledge check for module Propagator Formats And Header Allow-lists. Listed in astrona.yaml as a `type: quiz` entry.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-010-m03
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: module
+  id: module-03
+  title: Propagator Formats And Header Allow-lists
+questions:
+- id: ats076-010-m03-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the headers of each propagator
+  source_readings:
+  - sections/section-010/module-03/course-01-one-span-context-several-header-formats.md
+  prompt: Which header does the `jaeger` propagator write?
+  options:
+  - id: a
+    text: "`uber-trace-id`."
+    explanation: Correct. The Jaeger format is one header with four fields separated
+      by colons.
+  - id: b
+    text: "`traceparent`."
+    explanation: This is the header of the `tracecontext` propagator.
+  - id: c
+    text: "`X-B3-TraceId`."
+    explanation: This is a header of the `b3multi` propagator.
+  - id: d
+    text: "`b3`."
+    explanation: This is the single header of the `b3` propagator.
+  correct_option: a
+  explanation: The Jaeger propagator uses the single header `uber-trace-id`.
+- id: ats076-010-m03-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: State the default propagators
+  source_readings:
+  - sections/section-010/module-03/course-01-one-span-context-several-header-formats.md
+  prompt: What is the default value of `OTEL_PROPAGATORS`?
+  options:
+  - id: a
+    text: "`b3,baggage`."
+    explanation: B3 is not a default.
+  - id: b
+    text: "`tracecontext,baggage`."
+    explanation: Correct. W3C Trace Context and W3C Baggage are on by default.
+  - id: c
+    text: "`jaeger`."
+    explanation: Jaeger is not a default.
+  - id: d
+    text: "`none`."
+    explanation: "`none` turns propagation off and is never the default."
+  correct_option: b
+  explanation: The default is `tracecontext,baggage`.
+- id: ats076-010-m03-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain B3 identifier lengths
+  source_readings:
+  - sections/section-010/module-03/course-01-one-span-context-several-header-formats.md
+  prompt: A service receives a B3 trace identifier of 16 hexadecimal characters. What
+    does an OpenTelemetry receiver do?
+  options:
+  - id: a
+    text: It rejects the header.
+    explanation: B3 allows 64-bit identifiers, so the header is valid.
+  - id: b
+    text: It cuts the identifier to 8 characters.
+    explanation: Nothing is cut.
+  - id: c
+    text: It pads the identifier with zeros on the left to 128 bits.
+    explanation: Correct. An OpenTelemetry trace identifier always has 128 bits.
+  - id: d
+    text: It generates a new random trace identifier.
+    explanation: The trace identifier is kept so that the trace stays connected.
+  correct_option: c
+  explanation: A 64-bit B3 trace identifier is padded on the left with zeros.
+- id: ats076-010-m03-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe a composite propagator
+  source_readings:
+  - sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+  prompt: A service uses `OTEL_PROPAGATORS=tracecontext,baggage,b3`. Which headers
+    does it write on an outgoing request?
+  options:
+  - id: a
+    text: Only `traceparent`.
+    explanation: The other propagators in the list also inject.
+  - id: b
+    text: Only `b3`, because it is last.
+    explanation: The order does not remove the other formats on inject.
+  - id: c
+    text: None, because several propagators cancel each other.
+    explanation: A composite calls every propagator.
+  - id: d
+    text: "`traceparent`, `tracestate`, `baggage` and `b3`."
+    explanation: Correct. Every propagator in the list injects its own headers.
+  correct_option: d
+  explanation: On inject, every propagator in the list writes its own headers.
+- id: ats076-010-m03-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Plan a format migration
+  source_readings:
+  - sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+  prompt: In which order should a migration from B3 to W3C Trace Context change the
+    services?
+  options:
+  - id: a
+    text: Make every service read both formats, then remove the old format.
+    explanation: Correct. This keeps every caller readable at every step.
+  - id: b
+    text: Change one service to the new format only.
+    explanation: Callers that still write B3 would lose the link at that service.
+  - id: c
+    text: Remove B3 everywhere first.
+    explanation: Services that still read only B3 would break.
+  - id: d
+    text: Change the proxies last and leave the services alone.
+    explanation: The services decide the format, so they must be changed too.
+  correct_option: a
+  explanation: Reading both formats first keeps every hop readable during the migration.
+- id: ats076-010-m03-q06
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain the none propagator
+  source_readings:
+  - sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+  prompt: A service sets `OTEL_PROPAGATORS=none`. What is the result?
+  options:
+  - id: a
+    text: It uses the default propagators.
+    explanation: "`none` is not an alias for the default."
+  - id: b
+    text: It does not extract or inject, so every request starts a new trace.
+    explanation: Correct. The value turns propagation off.
+  - id: c
+    text: It injects but does not extract.
+    explanation: It turns off both operations.
+  - id: d
+    text: It only drops `tracestate`.
+    explanation: It turns off all propagation, not one header.
+  correct_option: b
+  explanation: "`none` turns propagation off in both directions."
+- id: ats076-010-m03-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Classify proxy header handling
+  source_readings:
+  - sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+  prompt: A proxy has a rule that sets `traceparent` to an empty string. Which type
+    of proxy behaviour is this?
+  options:
+  - id: a
+    text: An allow-list.
+    explanation: An allow-list removes everything that is not listed.
+  - id: b
+    text: A caching rule.
+    explanation: Caching does not change request headers.
+  - id: c
+    text: A forward-all proxy with a rule that removes one header.
+    explanation: Correct. nginx forwards all headers unless a rule removes one, and
+      an empty value removes it.
+  - id: d
+    text: A CORS rule.
+    explanation: CORS rules act on response headers for browsers.
+  correct_option: c
+  explanation: An empty value in `proxy_set_header` removes the header; other headers
+    still pass.
+- id: ats076-010-m03-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: List the headers of each format
+  source_readings:
+  - sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+  prompt: Which header names does an allow-list for `b3multi` need?
+  options:
+  - id: a
+    text: Only `b3`.
+    explanation: "`b3` is the single-header form."
+  - id: b
+    text: Only `traceparent`.
+    explanation: "`traceparent` belongs to `tracecontext`."
+  - id: c
+    text: Only `uber-trace-id`.
+    explanation: "`uber-trace-id` belongs to `jaeger`."
+  - id: d
+    text: "`x-b3-traceid`, `x-b3-spanid`, `x-b3-sampled`, `x-b3-parentspanid` and
+      `x-b3-flags`."
+    explanation: Correct. The multi-header form uses one header per value.
+  correct_option: d
+  explanation: The multi-header form is several headers and all of them must be allowed.
+- id: ats076-010-m03-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Apply the browser cross-origin rule
+  source_readings:
+  - sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+  prompt: A browser page calls an API on another origin and the call fails. The page
+    sends `traceparent`. Which response header must list it?
+  options:
+  - id: a
+    text: "`Access-Control-Allow-Headers`."
+    explanation: Correct. The answer to the preflight request lists the request headers
+      the server accepts.
+  - id: b
+    text: "`Content-Type`."
+    explanation: It names the body type, not the accepted request headers.
+  - id: c
+    text: "`Cache-Control`."
+    explanation: It controls caching.
+  - id: d
+    text: "`Vary`."
+    explanation: It names the request headers that change a cached answer, but does
+      not allow them.
+  correct_option: a
+  explanation: The answer to the preflight request must allow `traceparent` in `Access-Control-Allow-Headers`.
+- id: ats076-010-m03-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Repair without removing security rules
+  source_readings:
+  - sections/section-010/module-03/course-04-proving-header-formats-with-requests.md
+  prompt: A repair removes the rule that hides `b3` and also the rule that hides `x-internal-debug`.
+    What is wrong with it?
+  options:
+  - id: a
+    text: Nothing. Fewer rules are always better.
+    explanation: A rule may protect the system and must be judged on its own.
+  - id: b
+    text: It removes a security rule that is not part of the fault.
+    explanation: Correct. A repair must change only what hides the trace headers and
+      then test both sides.
+  - id: c
+    text: "`x-internal-debug` is a trace header."
+    explanation: It is a debug switch that callers must not set.
+  - id: d
+    text: The proxy needs no restart.
+    explanation: nginx reads its configuration at start, so a restart is needed.
+  correct_option: b
+  explanation: Test that the trace headers arrive and that the protected header still
+    does not.

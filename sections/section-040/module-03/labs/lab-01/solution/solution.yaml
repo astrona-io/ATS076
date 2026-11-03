@@ -1,0 +1,25 @@
+# Reference solution for Repair A Schema File.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: schema-file
+  namespace: starfleet
+data:
+  schema.yaml: |
+    file_format: 1.1.0
+    schema_url: https://schemas.example.com/starfleet/1.2.0
+    versions:
+      1.2.0:
+        spans:
+          changes:
+            - rename_attributes:
+                attribute_map:
+                  ship.name: starship.name
+      1.1.0:
+        resources:
+          changes:
+            - rename_attributes:
+                attribute_map:
+                  crew.id: member.id
+      1.0.0:

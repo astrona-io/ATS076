@@ -333,3 +333,280 @@ questions:
     explanation: New services would lack the legacy name.
   correct_option: a
   explanation: A window needs a planned end.
+- id: ats076-final-010-n01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe a composite propagator
+  source_readings:
+  - sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+  prompt: A service uses `OTEL_PROPAGATORS=tracecontext,baggage,b3`. Which headers
+    does it write on an outgoing request?
+  options:
+  - id: a
+    text: Only `traceparent`.
+    explanation: The other propagators in the list also inject.
+  - id: b
+    text: "`traceparent`, `tracestate`, `baggage` and `b3`."
+    explanation: Correct. Every propagator in the list injects its own headers.
+  - id: c
+    text: Only `b3`, because it is last.
+    explanation: The order does not remove the other formats on inject.
+  - id: d
+    text: None, because several propagators cancel each other.
+    explanation: A composite calls every propagator.
+  correct_option: b
+  explanation: On inject, every propagator in the list writes its own headers.
+- id: ats076-final-010-n02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: List the headers of each format
+  source_readings:
+  - sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+  prompt: Which header names does an allow-list for `b3multi` need?
+  options:
+  - id: a
+    text: Only `b3`.
+    explanation: "`b3` is the single-header form."
+  - id: b
+    text: Only `traceparent`.
+    explanation: "`traceparent` belongs to `tracecontext`."
+  - id: c
+    text: "`x-b3-traceid`, `x-b3-spanid`, `x-b3-sampled`, `x-b3-parentspanid` and
+      `x-b3-flags`."
+    explanation: Correct. The multi-header form uses one header per value.
+  - id: d
+    text: Only `uber-trace-id`.
+    explanation: "`uber-trace-id` belongs to `jaeger`."
+  correct_option: c
+  explanation: The multi-header form is several headers and all of them must be allowed.
+- id: ats076-final-010-n03
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Repair without removing security rules
+  source_readings:
+  - sections/section-010/module-03/course-04-proving-header-formats-with-requests.md
+  prompt: A repair removes the rule that hides `b3` and also the rule that hides `x-internal-debug`.
+    What is wrong with it?
+  options:
+  - id: a
+    text: Nothing. Fewer rules are always better.
+    explanation: A rule may protect the system and must be judged on its own.
+  - id: b
+    text: "`x-internal-debug` is a trace header."
+    explanation: It is a debug switch that callers must not set.
+  - id: c
+    text: The proxy needs no restart.
+    explanation: nginx reads its configuration at start, so a restart is needed.
+  - id: d
+    text: It removes a security rule that is not part of the fault.
+    explanation: Correct. A repair must change only what hides the trace headers and
+      then test both sides.
+  correct_option: d
+  explanation: Test that the trace headers arrive and that the protected header still
+    does not.
+- id: ats076-final-020-n01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain how extensions start
+  source_readings:
+  - sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  prompt: An extension is defined under `extensions` but is not in `service.extensions`.
+    What happens?
+  options:
+  - id: a
+    text: It starts with default settings.
+    explanation: Defaults apply only to extensions that start.
+  - id: b
+    text: It never starts.
+    explanation: Correct. Only listed extensions start, and the configuration check
+      does not complain.
+  - id: c
+    text: It starts only if a pipeline uses it.
+    explanation: Pipelines do not use extensions.
+  - id: d
+    text: The Collector refuses to start.
+    explanation: An unused definition is accepted.
+  correct_option: b
+  explanation: An extension runs only when it is listed in `service.extensions`.
+- id: ats076-final-020-n02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain port-forward
+  source_readings:
+  - sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  prompt: Why does `kubectl port-forward` reach an endpoint that is bound to `localhost`
+    in the pod?
+  options:
+  - id: a
+    text: It changes the binding of the extension.
+    explanation: It does not change the Collector.
+  - id: b
+    text: It restarts the Collector.
+    explanation: It does not restart anything.
+  - id: c
+    text: It connects inside the network namespace of the pod.
+    explanation: Correct. Inside that namespace, localhost is the pod itself.
+  - id: d
+    text: It copies the page to your machine.
+    explanation: It forwards a connection, not files.
+  correct_option: c
+  explanation: The forward connects from inside the pod network namespace.
+- id: ats076-final-020-n03
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Apply an investigation order
+  source_readings:
+  - sections/section-020/module-03/course-04-choosing-the-right-diagnostic-tool.md
+  prompt: Which order of investigation does this module recommend for missing data?
+  options:
+  - id: a
+    text: pprof first, then everything else.
+    explanation: A profile is expensive and answers only memory and CPU questions.
+  - id: b
+    text: Debug exporter first on every pipeline.
+    explanation: It adds load and can hide the real fault.
+  - id: c
+    text: Restart the Collector, then read nothing.
+    explanation: A restart removes evidence.
+  - id: d
+    text: Health check, log, pipelinez, counters, debug exporter, then profile if
+      needed.
+    explanation: Correct. It goes from cheap and broad to expensive and narrow.
+  correct_option: d
+  explanation: Start with cheap, broad evidence and narrow down.
+- id: ats076-final-030-n01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: List retryable HTTP statuses
+  source_readings:
+  - sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+  prompt: Which HTTP statuses does an OTLP sender retry?
+  options:
+  - id: a
+    text: Every 5xx status.
+    explanation: A 500 is permanent.
+  - id: b
+    text: 429, 502, 503 and 504.
+    explanation: Correct. These are the statuses the specification marks as retryable.
+  - id: c
+    text: Every 4xx status.
+    explanation: Most 4xx statuses are permanent.
+  - id: d
+    text: 400 and 401.
+    explanation: Both are permanent.
+  correct_option: b
+  explanation: Only 429, 502, 503 and 504 are retried.
+- id: ats076-final-030-n02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Handle a partial success
+  source_readings:
+  - sections/section-030/module-03/course-03-partial-success-and-rejected-items.md
+  prompt: 'A server answers HTTP 200 and a body with `rejectedSpans: 3`. What must
+    the sender do?'
+  options:
+  - id: a
+    text: Retry the whole request.
+    explanation: The same items would be rejected again.
+  - id: b
+    text: Retry only the rejected spans.
+    explanation: The sender does not know which spans were rejected.
+  - id: c
+    text: Not retry, and log the error message.
+    explanation: Correct. A retry would store the accepted spans twice.
+  - id: d
+    text: Drop the connection.
+    explanation: The request succeeded on the transport.
+  correct_option: c
+  explanation: A partial success must not be retried.
+- id: ats076-final-030-n03
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Diagnose a permanent error
+  source_readings:
+  - sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+  prompt: The exporter log says the data was dropped with status 404, and `retry_on_failure`
+    is enabled. What do you change?
+  options:
+  - id: a
+    text: "`max_elapsed_time`."
+    explanation: The error is not retried, so the limit is not reached.
+  - id: b
+    text: The queue size.
+    explanation: The queue is not full.
+  - id: c
+    text: The batch size.
+    explanation: The batch size does not change the path.
+  - id: d
+    text: The endpoint or path, because the status is permanent.
+    explanation: Correct. Retry settings never apply to a permanent error.
+  correct_option: d
+  explanation: A permanent error needs a change of the request, not of the retry settings.
+- id: ats076-final-040-n01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a rename entry
+  source_readings:
+  - sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+  prompt: 'In an `attribute_map` entry `ship.name: starship.name`, which name is the
+    old one?'
+  options:
+  - id: a
+    text: "`starship.name`, the value."
+    explanation: The value is the name after the change.
+  - id: b
+    text: "`ship.name`, the key."
+    explanation: 'Correct. The map is written as old: new.'
+  - id: c
+    text: Both are old.
+    explanation: One of the two is new.
+  - id: d
+    text: It depends on the version.
+    explanation: The direction of the map is fixed by the format.
+  correct_option: b
+  explanation: The key is the old name and the value is the new name.
+- id: ats076-final-040-n02
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Explain the reverse direction
+  source_readings:
+  - sections/section-040/module-03/course-02-transformations-and-their-direction.md
+  prompt: Why must a rename in a schema file be one to one?
+  options:
+  - id: a
+    text: Because the YAML parser requires it.
+    explanation: The parser does not check it.
+  - id: b
+    text: To save space.
+    explanation: Size is not the reason.
+  - id: c
+    text: So that a downward translation can restore the old name.
+    explanation: Correct. If two old names map to one new name, the reverse is ambiguous.
+  - id: d
+    text: Because backends reject merged names.
+    explanation: Backends are not part of the rule.
+  correct_option: c
+  explanation: A one to one rename keeps the translation well-defined in both directions.
+- id: ats076-final-040-n03
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Spot a misspelled key
+  source_readings:
+  - sections/section-040/module-03/course-04-checking-a-schema-file-by-hand.md
+  prompt: A schema file has the key `rename_attribute:` without the final `s`. What
+    is the risk?
+  options:
+  - id: a
+    text: The Collector refuses to start.
+    explanation: The Collector does not read the file at start.
+  - id: b
+    text: The rename runs twice.
+    explanation: A skipped key does not run at all.
+  - id: c
+    text: The rename is reversed.
+    explanation: Direction is set by the map, not the key.
+  - id: d
+    text: A tolerant reader may skip it without an error.
+    explanation: Correct. The rename is silently lost.
+  correct_option: d
+  explanation: A misspelled key can be skipped without an error.

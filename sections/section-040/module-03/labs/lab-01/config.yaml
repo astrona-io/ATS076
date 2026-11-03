@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Repair A Schema File (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-076-lab-040-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the restarted pods are ready
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: schema-url-and-format
+      description: "The schema file names its own URL and its file format"
+      type: file
+      source: validation/validate-schema-header.sh
+      hint: "The field schema_url is at the top level, next to file_format. Its last segment is the newest version in versions."
+    - name: transformation-keys
+      description: "Every transformation key is spelled as the format defines it"
+      type: file
+      source: validation/validate-transformation-keys.sh
+      hint: "The key is rename_attributes, with a final s. Search the file for rename_ and read every hit."
+    - name: maps-and-versions
+      description: "Every attribute_map is a map of old to new and all versions are listed"
+      type: file
+      source: validation/validate-maps-and-versions.sh
+      hint: "A map has lines of the form old: new with no leading dash. Keep versions 1.2.0, 1.1.0 and 1.0.0, and keep the original names."
+
+teardown:
+  keepCluster: false

@@ -47,6 +47,18 @@ This section teaches you to keep telemetry usable while attribute names change: 
     astrona submit -c .
     ```
 
+### 3. Schema Files And Transformations
+*   **Module Reader:** **[Module 3: Schema Files And Transformations](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-040/module-03/playground` - kind cluster, `kubectl`. A `shuttle` pod, a Collector with the `debug` exporter and a ConfigMap `schema-file` with mistakes.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-040/module-03/playground
+    ```
+*   **Lab:** `sections/section-040/module-03/labs/lab-01` (UNTESTED)
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-040/module-03/labs/lab-01
+    astrona submit -c .
+    ```
+
 ### Section Capstone Challenge
 *   **Comprehensive Challenge:** Schema Management Capstone - `sections/section-040/capstone/labs/lab-01` (UNTESTED)
     ```bash

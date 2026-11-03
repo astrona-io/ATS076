@@ -47,6 +47,18 @@ This section teaches you to find the stage of a Collector pipeline that loses te
     astrona submit -c .
     ```
 
+### 3. Collector Diagnostic Extensions
+*   **Module Reader:** **[Module 3: Collector Diagnostic Extensions](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-020/module-03/playground` - kind cluster, `kubectl`. A `shuttle` pod and a Collector with zpages and pprof defined but not enabled.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-020/module-03/playground
+    ```
+*   **Lab:** `sections/section-020/module-03/labs/lab-01` (UNTESTED)
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-020/module-03/labs/lab-01
+    astrona submit -c .
+    ```
+
 ### Section Capstone Challenge
 *   **Comprehensive Challenge:** Debugging Pipelines Capstone - `sections/section-020/capstone/labs/lab-01` (UNTESTED)
     ```bash

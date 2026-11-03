@@ -118,6 +118,53 @@ modules:
     title: Summary
     path: sections/section-010/module-02/course-03-summary.md
   - type: reading
+    title: Propagator Formats And Header Allow-lists
+    path: sections/section-010/module-03/course.md
+  - type: reading
+    title: One Span Context, Several Header Formats
+    path: sections/section-010/module-03/course-01-one-span-context-several-header-formats.md
+  - type: reading
+    title: Mixed Fleets And Composite Propagators
+    path: sections/section-010/module-03/course-02-mixed-fleets-and-composite-propagators.md
+  - type: reading
+    title: Proxies, Allow-lists And Browsers
+    path: sections/section-010/module-03/course-03-proxies-allow-lists-and-browsers.md
+  - type: reading
+    title: Proving Header Formats With Requests
+    path: sections/section-010/module-03/course-04-proving-header-formats-with-requests.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Forward Every Trace Header Format Through A Gateway Lab
+    path: sections/section-010/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: context-propagation
+    task_kind: fix
+    tags:
+    - b3
+    - jaeger
+    - propagator
+    - nginx
+    - allow-list
+    learning_goals:
+    - Find the header names that the gateway removes
+    - Stop hiding the B3 and Jaeger headers while keeping the debug header hidden
+    - Prove each header format with a request
+    resources:
+    - name: W3C Trace Context
+      url: https://www.w3.org/TR/trace-context/
+    - name: OpenTelemetry context propagation
+      url: https://opentelemetry.io/docs/concepts/context-propagation/
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-03/course-05-summary.md
+  - type: quiz
+    title: 'Knowledge Check: Propagator Formats And Header Allow-lists'
+    path: sections/section-010/module-03/quiz.yaml
+    pass_score: 70
+  - type: reading
     title: Question
     path: sections/section-010/capstone/labs/lab-01/question.md
   - type: lab
@@ -231,6 +278,52 @@ modules:
     title: Summary
     path: sections/section-020/module-02/course-03-summary.md
   - type: reading
+    title: Collector Diagnostic Extensions
+    path: sections/section-020/module-03/course.md
+  - type: reading
+    title: What An Extension Is And How It Starts
+    path: sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  - type: reading
+    title: The zPages Extension
+    path: sections/section-020/module-03/course-02-the-zpages-extension.md
+  - type: reading
+    title: The pprof Extension And The Health Check
+    path: sections/section-020/module-03/course-03-the-pprof-extension-and-the-health-check.md
+  - type: reading
+    title: Choosing The Right Diagnostic Tool
+    path: sections/section-020/module-03/course-04-choosing-the-right-diagnostic-tool.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Reach The Collector Diagnostic Pages Lab
+    path: sections/section-020/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: collector
+    task_kind: fix
+    tags:
+    - zpages
+    - pprof
+    - extensions
+    - collector
+    learning_goals:
+    - Enable zpages and pprof in service.extensions
+    - Bind both endpoints so they can be reached from another pod
+    - Keep the Collector pipeline working
+    resources:
+    - name: Collector troubleshooting
+      url: https://opentelemetry.io/docs/collector/troubleshooting/
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-03/course-05-summary.md
+  - type: quiz
+    title: 'Knowledge Check: Collector Diagnostic Extensions'
+    path: sections/section-020/module-03/quiz.yaml
+    pass_score: 70
+  - type: reading
     title: Question
     path: sections/section-020/capstone/labs/lab-01/question.md
   - type: lab
@@ -341,6 +434,52 @@ modules:
   - type: reading
     title: Summary
     path: sections/section-030/module-02/course-03-summary.md
+  - type: reading
+    title: OTLP Responses And Retry Semantics
+    path: sections/section-030/module-03/course.md
+  - type: reading
+    title: What An OTLP Server Answers
+    path: sections/section-030/module-03/course-01-what-an-otlp-server-answers.md
+  - type: reading
+    title: Retryable And Permanent Errors
+    path: sections/section-030/module-03/course-02-retryable-and-permanent-errors.md
+  - type: reading
+    title: Partial Success And Rejected Items
+    path: sections/section-030/module-03/course-03-partial-success-and-rejected-items.md
+  - type: reading
+    title: Throttling, Backoff And Failure Evidence
+    path: sections/section-030/module-03/course-04-throttling-backoff-and-failure-evidence.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Fix An Exporter That Gets A Permanent Error Lab
+    path: sections/section-030/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: collector
+    task_kind: fix
+    tags:
+    - otlp
+    - retry
+    - exporter
+    - http-status
+    learning_goals:
+    - Read a permanent error in the Collector log
+    - Fix an exporter endpoint that doubles the signal path
+    - Prove with a request that spans reach the backend
+    resources:
+    - name: OTLP specification
+      url: https://opentelemetry.io/docs/specs/otlp/
+    - name: OpenTelemetry Collector configuration
+      url: https://opentelemetry.io/docs/collector/configuration/
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-03/course-05-summary.md
+  - type: quiz
+    title: 'Knowledge Check: OTLP Responses And Retry Semantics'
+    path: sections/section-030/module-03/quiz.yaml
+    pass_score: 70
   - type: reading
     title: Question
     path: sections/section-030/capstone/labs/lab-01/question.md
@@ -453,6 +592,52 @@ modules:
   - type: reading
     title: Summary
     path: sections/section-040/module-02/course-03-summary.md
+  - type: reading
+    title: Schema Files And Transformations
+    path: sections/section-040/module-03/course.md
+  - type: reading
+    title: The Layout Of A Schema File
+    path: sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+  - type: reading
+    title: Transformations And Their Direction
+    path: sections/section-040/module-03/course-02-transformations-and-their-direction.md
+  - type: reading
+    title: Schema URLs In OTLP Data
+    path: sections/section-040/module-03/course-03-schema-urls-in-otlp-data.md
+  - type: reading
+    title: Checking A Schema File By Hand
+    path: sections/section-040/module-03/course-04-checking-a-schema-file-by-hand.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Repair A Schema File Lab
+    path: sections/section-040/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: schema
+    task_kind: fix
+    tags:
+    - schema-file
+    - schema-url
+    - rename
+    - semantic-conventions
+    learning_goals:
+    - Find a missing schema URL and a misspelled transformation key
+    - Fix an attribute map written as a list
+    - Keep every version and the direction of each rename
+    resources:
+    - name: OpenTelemetry schemas
+      url: https://opentelemetry.io/docs/specs/otel/schemas/
+    - name: Schema file format
+      url: https://opentelemetry.io/docs/specs/otel/schemas/file_format_v1.1.0/
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-03/course-05-summary.md
+  - type: quiz
+    title: 'Knowledge Check: Schema Files And Transformations'
+    path: sections/section-040/module-03/quiz.yaml
+    pass_score: 70
   - type: reading
     title: Question
     path: sections/section-040/capstone/labs/lab-01/question.md

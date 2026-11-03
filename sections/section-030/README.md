@@ -47,6 +47,18 @@ This section teaches you to keep telemetry through an outage and a spike: the pa
     astrona submit -c .
     ```
 
+### 3. OTLP Responses And Retry Semantics
+*   **Module Reader:** **[Module 3: OTLP Responses And Retry Semantics](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-030/module-03/playground` - kind cluster, `kubectl`. A `shuttle` pod, a Collector and a backend Collector, with an exporter endpoint that doubles the path.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-030/module-03/playground
+    ```
+*   **Lab:** `sections/section-030/module-03/labs/lab-01` (UNTESTED)
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-030/module-03/labs/lab-01
+    astrona submit -c .
+    ```
+
 ### Section Capstone Challenge
 *   **Comprehensive Challenge:** Error Handling Capstone - `sections/section-030/capstone/labs/lab-01` (UNTESTED)
     ```bash

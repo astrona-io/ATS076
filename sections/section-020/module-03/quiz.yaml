@@ -1,0 +1,244 @@
+# Knowledge check for module Collector Diagnostic Extensions. Listed in astrona.yaml as a `type: quiz` entry.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-020-m03
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: module
+  id: module-03
+  title: Collector Diagnostic Extensions
+questions:
+- id: ats076-020-m03-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain how extensions start
+  source_readings:
+  - sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  prompt: An extension is defined under `extensions` but is not in `service.extensions`.
+    What happens?
+  options:
+  - id: a
+    text: It starts with default settings.
+    explanation: Defaults apply only to extensions that start.
+  - id: b
+    text: It never starts.
+    explanation: Correct. Only listed extensions start, and the configuration check
+      does not complain.
+  - id: c
+    text: It starts only if a pipeline uses it.
+    explanation: Pipelines do not use extensions.
+  - id: d
+    text: The Collector refuses to start.
+    explanation: An unused definition is accepted.
+  correct_option: b
+  explanation: An extension runs only when it is listed in `service.extensions`.
+- id: ats076-020-m03-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain endpoint binding
+  source_readings:
+  - sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  prompt: What is the difference between the endpoints `localhost:1777` and `0.0.0.0:1777`
+    in a pod?
+  options:
+  - id: a
+    text: There is no difference.
+    explanation: The host part decides who can connect.
+  - id: b
+    text: "`localhost` is faster."
+    explanation: Speed is not the difference.
+  - id: c
+    text: "`localhost` accepts connections only from inside the pod, and `0.0.0.0`
+      accepts them on every interface."
+    explanation: Correct. This is why a Service or another pod cannot reach a localhost
+      binding.
+  - id: d
+    text: "`0.0.0.0` accepts only IPv6."
+    explanation: "`0.0.0.0` means all IPv4 interfaces."
+  correct_option: c
+  explanation: A localhost binding is private to the pod.
+- id: ats076-020-m03-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain port-forward
+  source_readings:
+  - sections/section-020/module-03/course-01-what-an-extension-is-and-how-it-starts.md
+  prompt: Why does `kubectl port-forward` reach an endpoint that is bound to `localhost`
+    in the pod?
+  options:
+  - id: a
+    text: It changes the binding of the extension.
+    explanation: It does not change the Collector.
+  - id: b
+    text: It restarts the Collector.
+    explanation: It does not restart anything.
+  - id: c
+    text: It copies the page to your machine.
+    explanation: It forwards a connection, not files.
+  - id: d
+    text: It connects inside the network namespace of the pod.
+    explanation: Correct. Inside that namespace, localhost is the pod itself.
+  correct_option: d
+  explanation: The forward connects from inside the pod network namespace.
+- id: ats076-020-m03-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the zPages pages
+  source_readings:
+  - sections/section-020/module-03/course-02-the-zpages-extension.md
+  prompt: Which zPages path lists the pipelines that are running?
+  options:
+  - id: a
+    text: "`/debug/pipelinez`."
+    explanation: Correct. It lists receivers, processors and exporters of each pipeline.
+  - id: b
+    text: "`/debug/tracez`."
+    explanation: It shows the spans of the Collector itself.
+  - id: c
+    text: "`/debug/featurez`."
+    explanation: It shows feature gates.
+  - id: d
+    text: "`/metrics`."
+    explanation: Metrics are served on the internal metrics port, not by zPages.
+  correct_option: a
+  explanation: "`/debug/pipelinez` shows the running pipelines."
+- id: ats076-020-m03-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compare the file with the running process
+  source_readings:
+  - sections/section-020/module-03/course-02-the-zpages-extension.md
+  prompt: A receiver is defined but not listed in any pipeline. Does it appear on
+    `pipelinez`?
+  options:
+  - id: a
+    text: Yes, because it is in the file.
+    explanation: The page shows the live state.
+  - id: b
+    text: No, because it is not running.
+    explanation: Correct. The page shows what runs, not what is defined.
+  - id: c
+    text: Yes, with a warning.
+    explanation: The page shows no warnings.
+  - id: d
+    text: Only after a restart.
+    explanation: The component never starts, even after a restart.
+  correct_option: b
+  explanation: Only components in a pipeline run.
+- id: ats076-020-m03-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain tracez
+  source_readings:
+  - sections/section-020/module-03/course-02-the-zpages-extension.md
+  prompt: What does the `tracez` page show?
+  options:
+  - id: a
+    text: The traces that flow through the Collector.
+    explanation: The `debug` exporter shows the data that flows through.
+  - id: b
+    text: The traces stored in the backend.
+    explanation: The Collector does not store traces.
+  - id: c
+    text: The Collector's own spans, grouped by name and latency.
+    explanation: Correct. It describes the work of the Collector.
+  - id: d
+    text: The application spans of one service.
+    explanation: It is about the Collector, not an application.
+  correct_option: c
+  explanation: "`tracez` is about the Collector's own spans."
+- id: ats076-020-m03-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name pprof profiles
+  source_readings:
+  - sections/section-020/module-03/course-03-the-pprof-extension-and-the-health-check.md
+  prompt: Which `pprof` path returns a memory profile?
+  options:
+  - id: a
+    text: "`/debug/pprof/profile`."
+    explanation: This is the CPU profile.
+  - id: b
+    text: "`/debug/pprof/goroutine`."
+    explanation: This shows goroutine stacks.
+  - id: c
+    text: "`/debug/servicez`."
+    explanation: This is a zPages path.
+  - id: d
+    text: "`/debug/pprof/heap`."
+    explanation: Correct. The heap profile shows allocated memory that is still held.
+  correct_option: d
+  explanation: The heap profile shows held memory.
+- id: ats076-020-m03-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: State what a health check proves
+  source_readings:
+  - sections/section-020/module-03/course-03-the-pprof-extension-and-the-health-check.md
+  prompt: The health check returns 200 and no data reaches the backend. What does
+    this show?
+  options:
+  - id: a
+    text: The process runs, but the health check does not show that data flows.
+    explanation: Correct. Check the counters for accepted and sent items next.
+  - id: b
+    text: The pipeline works.
+    explanation: A pipeline without a receiver still returns 200.
+  - id: c
+    text: The exporter works.
+    explanation: A failing exporter still returns 200.
+  - id: d
+    text: The backend is down.
+    explanation: Nothing here tells you the backend state.
+  correct_option: a
+  explanation: A 200 proves only that the process runs.
+- id: ats076-020-m03-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose a diagnostic tool
+  source_readings:
+  - sections/section-020/module-03/course-04-choosing-the-right-diagnostic-tool.md
+  prompt: Which tool shows the attributes of a span after a processor changed them?
+  options:
+  - id: a
+    text: The health check.
+    explanation: It shows only that the process runs.
+  - id: b
+    text: The `debug` exporter with `detailed` verbosity.
+    explanation: Correct. It writes the content of the data to the log.
+  - id: c
+    text: zPages `pipelinez`.
+    explanation: It shows structure, not data.
+  - id: d
+    text: pprof.
+    explanation: It shows CPU and memory.
+  correct_option: b
+  explanation: The `debug` exporter shows the data content.
+- id: ats076-020-m03-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Apply an investigation order
+  source_readings:
+  - sections/section-020/module-03/course-04-choosing-the-right-diagnostic-tool.md
+  prompt: Which order of investigation does this module recommend for missing data?
+  options:
+  - id: a
+    text: pprof first, then everything else.
+    explanation: A profile is expensive and answers only memory and CPU questions.
+  - id: b
+    text: Debug exporter first on every pipeline.
+    explanation: It adds load and can hide the real fault.
+  - id: c
+    text: Health check, log, pipelinez, counters, debug exporter, then profile if
+      needed.
+    explanation: Correct. It goes from cheap and broad to expensive and narrow.
+  - id: d
+    text: Restart the Collector, then read nothing.
+    explanation: A restart removes evidence.
+  correct_option: c
+  explanation: Start with cheap, broad evidence and narrow down.

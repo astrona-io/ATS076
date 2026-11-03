@@ -47,6 +47,18 @@ This section teaches you to find where a trace is cut in two and to decide which
     astrona submit -c .
     ```
 
+### 3. Propagator Formats And Header Allow-lists
+*   **Module Reader:** **[Module 3: Propagator Formats And Header Allow-lists](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-010/module-03/playground` - kind cluster, `kubectl`. A `shuttle` pod, a `probe` and a `gateway` proxy that removes B3, Jaeger and debug headers.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-010/module-03/playground
+    ```
+*   **Lab:** `sections/section-010/module-03/labs/lab-01` (UNTESTED)
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS076.git -c sections/section-010/module-03/labs/lab-01
+    astrona submit -c .
+    ```
+
 ### Section Capstone Challenge
 *   **Comprehensive Challenge:** Context Propagation Capstone - `sections/section-010/capstone/labs/lab-01` (UNTESTED)
     ```bash

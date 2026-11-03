@@ -1,0 +1,245 @@
+# Knowledge check for module Schema Files And Transformations. Listed in astrona.yaml as a `type: quiz` entry.
+---
+schema_version: 1
+kind: question_bank
+id: ats076-040-m03
+course_id: ATS076
+exam_code: OTCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: module
+  id: module-03
+  title: Schema Files And Transformations
+questions:
+- id: ats076-040-m03-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the top-level fields
+  source_readings:
+  - sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+  prompt: What does the field `file_format` of a schema file describe?
+  options:
+  - id: a
+    text: The version of the semantic conventions.
+    explanation: That version is named by `schema_url` and by the keys of `versions`.
+  - id: b
+    text: The file type of the telemetry.
+    explanation: The field says nothing about telemetry.
+  - id: c
+    text: The encoding of the file.
+    explanation: The field is not about text encoding.
+  - id: d
+    text: The version of the schema file format.
+    explanation: Correct. A tool reads it first, to know how to parse the rest.
+  correct_option: d
+  explanation: "`file_format` is the version of the file format."
+- id: ats076-040-m03-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a rename entry
+  source_readings:
+  - sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+  prompt: 'In an `attribute_map` entry `ship.name: starship.name`, which name is the
+    old one?'
+  options:
+  - id: a
+    text: "`ship.name`, the key."
+    explanation: 'Correct. The map is written as old: new.'
+  - id: b
+    text: "`starship.name`, the value."
+    explanation: The value is the name after the change.
+  - id: c
+    text: Both are old.
+    explanation: One of the two is new.
+  - id: d
+    text: It depends on the version.
+    explanation: The direction of the map is fixed by the format.
+  correct_option: a
+  explanation: The key is the old name and the value is the new name.
+- id: ats076-040-m03-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain how versions are walked
+  source_readings:
+  - sections/section-040/module-03/course-01-the-layout-of-a-schema-file.md
+  prompt: Why is a version with no changes still listed under `versions`?
+  options:
+  - id: a
+    text: The format requires a comment.
+    explanation: The format requires no comment.
+  - id: b
+    text: A tool walks the versions in order and needs each one to exist.
+    explanation: Correct. Without the entry, the walk from one version to another
+      has a gap.
+  - id: c
+    text: It sets the schema URL.
+    explanation: The URL is the top-level field `schema_url`.
+  - id: d
+    text: It holds the defaults.
+    explanation: A version has no defaults.
+  correct_option: b
+  explanation: Tools need every version to exist to walk from one to another.
+- id: ats076-040-m03-q04
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Explain the reverse direction
+  source_readings:
+  - sections/section-040/module-03/course-02-transformations-and-their-direction.md
+  prompt: Why must a rename in a schema file be one to one?
+  options:
+  - id: a
+    text: Because the YAML parser requires it.
+    explanation: The parser does not check it.
+  - id: b
+    text: To save space.
+    explanation: Size is not the reason.
+  - id: c
+    text: So that a downward translation can restore the old name.
+    explanation: Correct. If two old names map to one new name, the reverse is ambiguous.
+  - id: d
+    text: Because backends reject merged names.
+    explanation: Backends are not part of the rule.
+  correct_option: c
+  explanation: A one to one rename keeps the translation well-defined in both directions.
+- id: ats076-040-m03-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe the upward walk
+  source_readings:
+  - sections/section-040/module-03/course-02-transformations-and-their-direction.md
+  prompt: A tool moves a span from version 1.0.0 to 1.2.0. In which order does it
+    apply the changes?
+  options:
+  - id: a
+    text: The changes of 1.2.0, then those of 1.1.0.
+    explanation: That is the downward order.
+  - id: b
+    text: Only the changes of 1.2.0.
+    explanation: The changes of every version in between apply.
+  - id: c
+    text: In the order of the YAML keys.
+    explanation: Versions are compared as version numbers, not by position in the
+      file.
+  - id: d
+    text: The changes of 1.1.0, then those of 1.2.0.
+    explanation: Correct. The versions are applied in version order, and the list
+      `changes` in list order.
+  correct_option: d
+  explanation: Changes apply version by version, oldest first, when moving up.
+- id: ats076-040-m03-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Apply a rename with OTTL
+  source_readings:
+  - sections/section-040/module-03/course-02-transformations-and-their-direction.md
+  prompt: Which Collector component can perform the same rename as a schema entry
+    if no schema component is present?
+  options:
+  - id: a
+    text: The `transform` processor with OTTL statements.
+    explanation: Correct. `set` and `delete_key` copy a value to the new name and
+      remove the old one.
+  - id: b
+    text: The `batch` processor.
+    explanation: It groups data and does not edit attributes.
+  - id: c
+    text: The `memory_limiter` processor.
+    explanation: It limits memory use.
+  - id: d
+    text: The `debug` exporter.
+    explanation: It prints data and does not change it.
+  correct_option: a
+  explanation: The `transform` processor can apply the rename.
+- id: ats076-040-m03-q07
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Locate the schema URL
+  source_readings:
+  - sections/section-040/module-03/course-03-schema-urls-in-otlp-data.md
+  prompt: On which two levels does OTLP data carry a schema URL?
+  options:
+  - id: a
+    text: The span and the trace.
+    explanation: Spans have no schema URL field of their own.
+  - id: b
+    text: The resource and the instrumentation scope.
+    explanation: Correct. Each level has a `schema_url` field and the two can differ.
+  - id: c
+    text: The request and the response.
+    explanation: The URL is part of the data, not of the transport.
+  - id: d
+    text: The exporter and the receiver.
+    explanation: Components do not carry one.
+  correct_option: b
+  explanation: The resource and the scope each carry a schema URL.
+- id: ats076-040-m03-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret an empty URL
+  source_readings:
+  - sections/section-040/module-03/course-03-schema-urls-in-otlp-data.md
+  prompt: A scope has an empty schema URL. What does a consumer know about its attribute
+    names?
+  options:
+  - id: a
+    text: They use the newest version.
+    explanation: Nothing says it is the newest.
+  - id: b
+    text: They use the oldest version.
+    explanation: Nothing says it is the oldest.
+  - id: c
+    text: Nothing; the version is unknown.
+    explanation: Correct. An empty field means unknown.
+  - id: d
+    text: They are invalid.
+    explanation: They can be valid under any version.
+  correct_option: c
+  explanation: An empty schema URL means the version is unknown.
+- id: ats076-040-m03-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: State what the URL guarantees
+  source_readings:
+  - sections/section-040/module-03/course-03-schema-urls-in-otlp-data.md
+  prompt: Does the Collector check that attribute names match the schema URL of the
+    data?
+  options:
+  - id: a
+    text: Yes, always.
+    explanation: No component rejects data because of a mismatch.
+  - id: b
+    text: Yes, but only for resources.
+    explanation: Neither level is verified.
+  - id: c
+    text: Yes, with the `debug` exporter.
+    explanation: The `debug` exporter prints data and verifies nothing.
+  - id: d
+    text: No; the URL is a claim by the producer.
+    explanation: Correct. Nothing verifies the names, so read real spans.
+  correct_option: d
+  explanation: The URL is metadata and is not checked.
+- id: ats076-040-m03-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Spot a misspelled key
+  source_readings:
+  - sections/section-040/module-03/course-04-checking-a-schema-file-by-hand.md
+  prompt: A schema file has the key `rename_attribute:` without the final `s`. What
+    is the risk?
+  options:
+  - id: a
+    text: A tolerant reader may skip it without an error.
+    explanation: Correct. The rename is silently lost.
+  - id: b
+    text: The Collector refuses to start.
+    explanation: The Collector does not read the file at start.
+  - id: c
+    text: The rename runs twice.
+    explanation: A skipped key does not run at all.
+  - id: d
+    text: The rename is reversed.
+    explanation: Direction is set by the map, not the key.
+  correct_option: a
+  explanation: A misspelled key can be skipped without an error.

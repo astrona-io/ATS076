@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuttle
+  namespace: starfleet
+  labels:
+    app: shuttle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuttle
+  template:
+    metadata:
+      labels:
+        app: shuttle
+    spec:
+      containers:
+        - name: shuttle
+          image: curlimages/curl:8.22.0
+          command: ["sh", "-c", "while true; do sleep 30; done"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otelcol-config
+  namespace: observability
+data:
+  config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          http:
+            endpoint: 0.0.0.0:4318
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [debug]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otelcol
+  namespace: observability
+  labels:
+    app: otelcol
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otelcol
+  template:
+    metadata:
+      labels:
+        app: otelcol
+    spec:
+      containers:
+        - name: otelcol
+          image: otel/opentelemetry-collector-contrib:0.164.0
+          args: ["--config=/conf/config.yaml"]
+          ports:
+            - name: otlp-http
+              containerPort: 4318
+          volumeMounts:
+            - name: conf
+              mountPath: /conf
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+      volumes:
+        - name: conf
+          configMap:
+            name: otelcol-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otelcol
+  namespace: observability
+spec:
+  selector:
+    app: otelcol
+  ports:
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: schema-file
+  namespace: starfleet
+data:
+  schema.yaml: |
+    file_format: 1.1.0
+    versions:
+      1.2.0:
+        spans:
+          changes:
+            - rename_attribute:
+                attribute_map:
+                  ship.name: starship.name
+      1.1.0:
+        resources:
+          changes:
+            - rename_attributes:
+                attribute_map:
+                  - crew.id: member.id
+      1.0.0:
