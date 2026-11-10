@@ -61,7 +61,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: context-propagation
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - traceparent
     - tracestate
@@ -99,7 +99,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: context-propagation
-    task_kind: fix
+    task_kind: build
     tags:
     - baggage
     - nginx
@@ -141,7 +141,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: context-propagation
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - b3
     - jaeger
@@ -173,7 +173,7 @@ modules:
     difficulty: advanced
     estimated_duration: 35m
     topic: context-propagation
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - traceparent
     - baggage
@@ -221,7 +221,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - receiver
@@ -258,7 +258,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - filter-processor
@@ -301,7 +301,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - zpages
     - pprof
@@ -332,7 +332,7 @@ modules:
     difficulty: advanced
     estimated_duration: 35m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - receiver
@@ -379,7 +379,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 30m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - exporter
@@ -413,7 +413,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - memory-limiter
@@ -458,7 +458,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - otlp
     - retry
@@ -489,7 +489,7 @@ modules:
     difficulty: advanced
     estimated_duration: 40m
     topic: collector
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - collector
     - retry
@@ -573,7 +573,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: collector
-    task_kind: fix
+    task_kind: migration
     tags:
     - collector
     - transform-processor
@@ -616,7 +616,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: schema
-    task_kind: fix
+    task_kind: troubleshooting
     tags:
     - schema-file
     - schema-url
