@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/opentelemetry-certified-associate-otca">
+    <img src="https://astrona.io/courses/opentelemetry-certified-associate-otca/domains/ATS076.svg" alt="ATS076: Maintaining and Debugging Observability Pipelines, part of the OpenTelemetry Certified Associate course on Astrona" width="100%">
+  </a>
+</p>
+
 # Maintaining and Debugging Observability Pipelines (ATS076)
 
 OpenTelemetry Certified Associate (OTCA): Maintaining and Debugging Observability Pipelines, worth 10% of the official curriculum. This course belongs to ATP015.
